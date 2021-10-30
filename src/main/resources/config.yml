@@ -1,0 +1,29 @@
+database:
+  host: localhost
+  port: 3306
+  username: admin
+  password: password
+  database: claimboxes
+
+update-interval: 20
+
+gui:
+  title: "&aYour Vouchers"
+  prev-page:
+    type: PAPER
+    name: "&cPrevious"
+  next-page:
+    type: PAPER
+    name: "&cNext"
+confirm-gui:
+  title: "&bConfirm Voucher Use"
+  background:
+    type: STAINED_GLASS_PANE
+    data: 15
+    name: " "
+  confirm:
+    type: EMERALD_BLOCK
+    name: "&a&lConfirm"
+  cancel:
+    type: REDSTONE_BLOCK
+    name: "&c&lCancel"

@@ -1,0 +1,14 @@
+errors:
+  not-player: "&cOnly players can run this command!"
+  claimbox-empty: "&cYour ClaimBox is empty!"
+  claimbox-empty-other: "&c{player}'s ClaimBox is empty!"
+  no-permission: "&cYou don't have permission to use this command"
+  unknown-player: "&cUnknown player {text}"
+  invalid-boolean: "&cInvalid boolean {text}, expected <true|false>"
+  unknown-voucher: "&cUnknown voucher {id}. Note that voucher codes cannot be used"
+  unknown-command: "&cUnknown Command, type /claimbox help for help"
+
+claimbox-reset: "&aYour ClaimBox has been reset"
+claimbox-reset-other: "&a{player}'s ClaimBox has been reset"
+voucher-given: "&aGiven {player} a voucher named {id}"
+voucher-given-all: "&aGiven all players in {group} a voucher named {id}"

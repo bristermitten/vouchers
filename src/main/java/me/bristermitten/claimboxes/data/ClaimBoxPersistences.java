@@ -1,10 +1,24 @@
 package me.bristermitten.claimboxes.data;
 
-import me.bristermitten.claimboxes.ClaimBoxes;
-import me.bristermitten.mittenlib.persistence.Persistence;
+import com.google.inject.Inject;
+import me.bristermitten.claimboxes.data.persistence.SQLClaimBoxPersistence;
 import me.bristermitten.mittenlib.persistence.Persistences;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.UUID;
 
-public interface ClaimBoxPersistence extends Persistence<UUID, ClaimBox> {
+public class ClaimBoxPersistences implements Persistences<UUID, ClaimBox, ClaimBoxPersistence> {
+    private final SQLClaimBoxPersistence sql;
+
+    @Inject
+    public ClaimBoxPersistences(SQLClaimBoxPersistence sql) {
+        this.sql = sql;
+    }
+
+    @Override
+    @NotNull
+    public Optional<ClaimBoxPersistence> mariadb() {
+        return Optional.of(sql);
+    }
 }
