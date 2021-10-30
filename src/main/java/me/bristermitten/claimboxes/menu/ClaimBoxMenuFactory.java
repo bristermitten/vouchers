@@ -5,10 +5,10 @@ import dev.triumphteam.gui.guis.GuiItem;
 import dev.triumphteam.gui.guis.PaginatedGui;
 import me.badbones69.vouchers.api.Vouchers;
 import me.badbones69.vouchers.api.objects.Voucher;
-import me.bristermitten.claimboxes.VoucherUtil;
 import me.bristermitten.claimboxes.config.ClaimBoxesConfig;
 import me.bristermitten.claimboxes.data.ClaimBox;
 import me.bristermitten.claimboxes.data.ClaimBoxManager;
+import me.bristermitten.claimboxes.lang.ClaimBoxesLangService;
 import me.bristermitten.mittenlib.lang.format.MessageFormatter;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -25,14 +25,16 @@ public class ClaimBoxMenuFactory {
     private final ConfirmVoucherUseMenuFactory confirmVoucherUseMenuFactory;
     private final MenuItems menuItems;
     private final ClaimBoxManager claimBoxManager;
+    private final ClaimBoxesLangService langService;
 
     @Inject
-    public ClaimBoxMenuFactory(Provider<ClaimBoxesConfig> configProvider, MessageFormatter messageFormatter, ConfirmVoucherUseMenuFactory confirmVoucherUseMenuFactory, MenuItems menuItems, ClaimBoxManager claimBoxManager) {
+    public ClaimBoxMenuFactory(Provider<ClaimBoxesConfig> configProvider, MessageFormatter messageFormatter, ConfirmVoucherUseMenuFactory confirmVoucherUseMenuFactory, MenuItems menuItems, ClaimBoxManager claimBoxManager, ClaimBoxesLangService langService) {
         this.configProvider = configProvider;
         this.messageFormatter = messageFormatter;
         this.confirmVoucherUseMenuFactory = confirmVoucherUseMenuFactory;
         this.menuItems = menuItems;
         this.claimBoxManager = claimBoxManager;
+        this.langService = langService;
     }
 
     public GuiItem createItem(ClaimBox box, PaginatedGui gui, String voucherId, @Nullable String args) {
@@ -47,14 +49,18 @@ public class ClaimBoxMenuFactory {
             confirmVoucherUseMenuFactory.create(
                     e -> gui.open(whoClicked),
                     e -> {
-                        VoucherUtil.redeemVoucher(voucher, whoClicked, item);
+                        if (whoClicked.getInventory().firstEmpty() == -1) {
+                            langService.send(whoClicked, conf -> conf.errors().inventoryFull());
+                            return;
+                        }
+                        whoClicked.getInventory().addItem(item);
                         claimBoxManager.remove(box, voucherId, args);
                         create(box, whoClicked).open(whoClicked, gui.getCurrentPageNum());
                     }, whoClicked
             ).open(whoClicked);
         });
-    }
 
+    }
 
     public PaginatedGui create(ClaimBox claimBox, OfflinePlayer owner) {
         final ClaimBoxesConfig config = configProvider.get();

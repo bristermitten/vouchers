@@ -7,6 +7,7 @@ errors:
   invalid-boolean: "&cInvalid boolean {text}, expected <true|false>"
   unknown-voucher: "&cUnknown voucher {id}. Note that voucher codes cannot be used"
   unknown-command: "&cUnknown Command, type /claimbox help for help"
+  inventory-full: "&cYou don't have room in your inventory to claim this voucher!"
 
 claimbox-reset: "&aYour ClaimBox has been reset"
 claimbox-reset-other: "&a{player}'s ClaimBox has been reset"

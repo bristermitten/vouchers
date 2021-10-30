@@ -26,5 +26,6 @@ public class ClaimBoxesLangConfigDTO {
         LangMessage invalidBoolean;
         LangMessage unknownVoucher;
         LangMessage unknownCommand;
+        LangMessage inventoryFull;
     }
 }
