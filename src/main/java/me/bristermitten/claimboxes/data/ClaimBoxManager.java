@@ -32,6 +32,11 @@ public class ClaimBoxManager {
 
     public void reset(ClaimBox claimBox) {
         claimBox.getMutableVoucherIds().clear();
+        persistence.save(claimBox)
+                .exceptionally(e -> {
+                    e.printStackTrace();
+                    return null;
+                });
     }
 
     public CompletableFuture<ClaimBox> getBox(UUID owner) {
@@ -47,6 +52,7 @@ public class ClaimBoxManager {
                     return null;
                 });
     }
+
 
     public void remove(ClaimBox claimBox, String voucherId, @Nullable String arg) {
         final String voucherString = VoucherUtil.makeVoucherString(voucherId, arg);
