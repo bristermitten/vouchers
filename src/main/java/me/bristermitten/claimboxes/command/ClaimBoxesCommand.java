@@ -88,6 +88,13 @@ public class ClaimBoxesCommand extends BaseCommand {
                 });
     }
 
+    @Subcommand("resetall")
+    @CommandPermission("resetall")
+    public void resetAll(CommandSender sender) {
+        claimBoxManager.resetAll();
+        langService.send(sender, ClaimBoxesLangConfig::claimboxResetAll);
+    }
+
     @Subcommand("reset")
     @CommandPermission("claimbox.reset.others")
     @CommandCompletion("@offlinePlayers")

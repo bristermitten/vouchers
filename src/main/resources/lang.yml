@@ -11,5 +11,6 @@ errors:
 
 claimbox-reset: "&aYour ClaimBox has been reset"
 claimbox-reset-other: "&a{player}'s ClaimBox has been reset"
+claimbox-reset-all: "&aAll claimboxes have been reset"
 voucher-given: "&aGiven {player} a voucher named {id}"
 voucher-given-all: "&aGiven all players in {group} a voucher named {id}"

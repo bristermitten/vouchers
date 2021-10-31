@@ -89,4 +89,15 @@ public class ClaimBoxManager {
                             .collect(Collectors.toSet());
                 });
     }
+
+    public void resetAll() {
+        for (ClaimBox value : claimBoxStorage.lookupAll().values()) {
+            reset(value);
+        }
+        claimBoxStorage.loadAll().thenAccept(c -> c.forEach(this::reset))
+                .exceptionally(e -> {
+                    e.printStackTrace();
+                    return null;
+                });
+    }
 }

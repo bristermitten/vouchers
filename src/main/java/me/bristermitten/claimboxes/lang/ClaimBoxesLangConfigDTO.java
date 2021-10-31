@@ -13,6 +13,7 @@ public class ClaimBoxesLangConfigDTO {
     ErrorConfigDTO errors;
     LangMessage claimboxReset;
     LangMessage claimboxResetOther;
+    LangMessage claimboxResetAll;
     LangMessage voucherGiven;
     LangMessage voucherGivenAll;
 
