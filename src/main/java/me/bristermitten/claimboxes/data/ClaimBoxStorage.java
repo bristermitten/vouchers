@@ -18,6 +18,19 @@ public class ClaimBoxStorage extends CachingPersistence<UUID, ClaimBox> implemen
         super(delegate, ClaimBox::getOwner);
     }
 
+    @Override
+    protected void addToCache(UUID id, ClaimBox data) {
+        final ClaimBox claimBox = lookupAll().get(id);
+        if (claimBox != null) {
+            // there's already an element in the cache, so merge them
+            claimBox.getMutableVoucherIds().clear();
+            claimBox.getMutableVoucherIds().addAll(data.getMutableVoucherIds());
+            super.addToCache(id, claimBox);
+            return;
+        }
+        super.addToCache(id, data);
+    }
+
     public ClaimBox createNewBox(UUID id) {
         final ClaimBox claimBox = new ClaimBox(id, Collections.emptyList());
         save(claimBox).exceptionally(t -> {

@@ -5,6 +5,7 @@ import dev.triumphteam.gui.guis.GuiItem;
 import dev.triumphteam.gui.guis.PaginatedGui;
 import me.badbones69.vouchers.api.Vouchers;
 import me.badbones69.vouchers.api.objects.Voucher;
+import me.bristermitten.claimboxes.VoucherUtil;
 import me.bristermitten.claimboxes.config.ClaimBoxesConfig;
 import me.bristermitten.claimboxes.data.ClaimBox;
 import me.bristermitten.claimboxes.data.ClaimBoxManager;
@@ -51,6 +52,10 @@ public class ClaimBoxMenuFactory {
                     e -> {
                         if (whoClicked.getInventory().firstEmpty() == -1) {
                             langService.send(whoClicked, conf -> conf.errors().inventoryFull());
+                            return;
+                        }
+                        if (!box.getVoucherIds().contains(VoucherUtil.makeVoucherString(voucherId, args))) {
+                            create(box, whoClicked).open(whoClicked, gui.getCurrentPageNum());
                             return;
                         }
                         whoClicked.getInventory().addItem(item);

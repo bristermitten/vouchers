@@ -13,7 +13,7 @@ public class ClaimBox {
 
     public ClaimBox(UUID owner, List<String> voucherIds) {
         this.owner = owner;
-        this.voucherIds = new ArrayList<>(voucherIds);
+        this.voucherIds = Collections.synchronizedList(new ArrayList<>(voucherIds));
     }
 
 
