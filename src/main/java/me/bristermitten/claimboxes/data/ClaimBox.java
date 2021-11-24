@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class ClaimBox {
     private final UUID owner;
@@ -13,7 +14,7 @@ public class ClaimBox {
 
     public ClaimBox(UUID owner, List<String> voucherIds) {
         this.owner = owner;
-        this.voucherIds = Collections.synchronizedList(new ArrayList<>(voucherIds));
+        this.voucherIds = new ArrayList<>(voucherIds);
     }
 
 
@@ -26,7 +27,9 @@ public class ClaimBox {
         return Collections.unmodifiableList(voucherIds);
     }
 
-    List<String> getMutableVoucherIds() {
-        return voucherIds;
+    public void editVoucherIds(Consumer<List<String>> consumer) {
+        synchronized (this) {
+            consumer.accept(voucherIds);
+        }
     }
 }

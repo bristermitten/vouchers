@@ -23,8 +23,10 @@ public class ClaimBoxStorage extends CachingPersistence<UUID, ClaimBox> implemen
         final ClaimBox claimBox = lookupAll().get(id);
         if (claimBox != null) {
             // there's already an element in the cache, so merge them
-            claimBox.getMutableVoucherIds().clear();
-            claimBox.getMutableVoucherIds().addAll(data.getMutableVoucherIds());
+            claimBox.editVoucherIds(voucherIds -> {
+                voucherIds.clear();
+                voucherIds.addAll(data.getVoucherIds());
+            });
             super.addToCache(id, claimBox);
             return;
         }

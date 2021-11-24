@@ -11,10 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -31,7 +28,7 @@ public class ClaimBoxManager {
     }
 
     public void reset(ClaimBox claimBox) {
-        claimBox.getMutableVoucherIds().clear();
+        claimBox.editVoucherIds(List::clear);
         persistence.save(claimBox)
                 .exceptionally(e -> {
                     e.printStackTrace();
@@ -45,7 +42,7 @@ public class ClaimBoxManager {
 
     public void give(ClaimBox claimBox, String voucherId, @Nullable String arg) {
         final String voucherString = VoucherUtil.makeVoucherString(voucherId, arg);
-        claimBox.getMutableVoucherIds().add(voucherString);
+        claimBox.editVoucherIds(v -> v.add(voucherString));
         persistence.addOne(claimBox.getOwner(), voucherString)
                 .exceptionally(e -> {
                     e.printStackTrace();
@@ -56,7 +53,7 @@ public class ClaimBoxManager {
 
     public void remove(ClaimBox claimBox, String voucherId, @Nullable String arg) {
         final String voucherString = VoucherUtil.makeVoucherString(voucherId, arg);
-        claimBox.getMutableVoucherIds().remove(voucherString);
+        claimBox.editVoucherIds(v -> v.remove(voucherString));
         persistence.removeOne(claimBox.getOwner(), voucherString)
                 .exceptionally(e -> {
                     e.printStackTrace();
@@ -91,11 +88,12 @@ public class ClaimBoxManager {
     }
 
     public void resetAll() {
-        for (ClaimBox value : claimBoxStorage.lookupAll().values()) {
-            reset(value);
-        }
-        claimBoxStorage.loadAll().thenAccept(c -> c.forEach(this::reset))
-                .exceptionally(e -> {
+        claimBoxStorage.loadAll()
+                .thenRun(() -> {
+                    for (ClaimBox value : claimBoxStorage.lookupAll().values()) {
+                        reset(value);
+                    }
+                }).exceptionally(e -> {
                     e.printStackTrace();
                     return null;
                 });
