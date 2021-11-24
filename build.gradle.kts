@@ -31,9 +31,11 @@ dependencies {
     annotationProcessor("me.bristermitten:mittenlib-annotation-processor:1.0-SNAPSHOT")
 
     implementation("dev.triumphteam:triumph-gui:3.0.4")
-    implementation("com.zaxxer:HikariCP:4.0.3")
+    implementation("com.zaxxer:HikariCP:5.0.0")
+    implementation("mysql:mysql-connector-java:8.0.27")
 
-    implementation("net.kyori:adventure-api:4.9.2")
+
+    implementation("net.kyori:adventure-api:4.9.3")
     implementation("net.kyori:adventure-platform-bukkit:4.0.0")
     implementation("net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT")
 
@@ -55,7 +57,13 @@ tasks {
     shadowJar {
         listOf(
             "com.google.common",
-            "com.google.inject"
+            "com.google.inject",
+            "com.zaxxer",
+            "com.mysql.cj",
+            "dev.triumphteam",
+            "co.aikar.locales",
+            "co.aikar.commands",
+            "net.kyori"
         ).forEach {
             relocate(it, "me.bristermitten.claimboxes.$it")
         }
