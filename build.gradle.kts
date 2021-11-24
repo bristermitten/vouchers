@@ -31,7 +31,7 @@ dependencies {
     annotationProcessor("me.bristermitten:mittenlib-annotation-processor:1.0-SNAPSHOT")
 
     implementation("dev.triumphteam:triumph-gui:3.0.4")
-    implementation("com.zaxxer:HikariCP:5.0.0")
+    implementation("com.zaxxer:HikariCP:4.0.3")
     implementation("mysql:mysql-connector-java:8.0.27")
 
 
