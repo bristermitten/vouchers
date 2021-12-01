@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import me.bristermitten.claimboxes.VoucherUtil;
 import me.bristermitten.claimboxes.data.persistence.SQLClaimBoxPersistence;
 import me.bristermitten.mittenlib.util.Futures;
+import me.bristermitten.mittenlib.util.Unit;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.model.user.UserManager;
@@ -29,11 +30,9 @@ public class ClaimBoxManager {
         this.persistence = persistence;
     }
 
-    public CompletableFuture<Void> reset(ClaimBox claimBox) {
-        logger.info(() -> "Resetting ClaimBox " + claimBox.getOwner());
+    public CompletableFuture<Unit> reset(ClaimBox claimBox) {
         claimBox.editVoucherIds(List::clear);
         return persistence.delete(claimBox.getOwner())
-                .thenRun(() -> logger.info(() -> "Saved ClaimBox from reset() " + claimBox.getOwner()))
                 .exceptionally(e -> {
                     e.printStackTrace();
                     return null;
@@ -41,17 +40,13 @@ public class ClaimBoxManager {
     }
 
     public CompletableFuture<ClaimBox> getBox(UUID owner) {
-        logger.info(() -> "Getting ClaimBox for " + owner);
         return claimBoxStorage.getOrCreate(owner);
     }
 
-    public CompletableFuture<Void> give(ClaimBox claimBox, String voucherId, @Nullable String arg) {
+    public CompletableFuture<Unit> give(ClaimBox claimBox, String voucherId, @Nullable String arg) {
         final String voucherString = VoucherUtil.makeVoucherString(voucherId, arg);
-        logger.info(() -> "Giving voucher " + voucherString + " to " + claimBox.getOwner());
         claimBox.editVoucherIds(v -> v.add(voucherString));
-        logger.info(() -> "Edited voucher list for " + claimBox.getOwner() + " to " + claimBox.getVoucherIds());
         return persistence.addOne(claimBox.getOwner(), voucherString)
-                .thenRun(() -> logger.info(() -> "Saved ClaimBox from give() " + claimBox.getOwner()))
                 .exceptionally(e -> {
                     e.printStackTrace();
                     return null;
@@ -61,11 +56,8 @@ public class ClaimBoxManager {
 
     public void remove(ClaimBox claimBox, String voucherId, @Nullable String arg) {
         final String voucherString = VoucherUtil.makeVoucherString(voucherId, arg);
-        logger.info(() -> "Removing voucher " + voucherString + " from " + claimBox.getOwner());
         claimBox.editVoucherIds(v -> v.remove(voucherString));
-        logger.info(() -> "Edited voucher list for " + claimBox.getOwner() + " to " + claimBox.getVoucherIds());
         persistence.removeOne(claimBox.getOwner(), voucherString)
-                .thenRun(() -> logger.info(() -> "Saved ClaimBox from remove() " + claimBox.getOwner()))
                 .exceptionally(e -> {
                     e.printStackTrace();
                     return null;
