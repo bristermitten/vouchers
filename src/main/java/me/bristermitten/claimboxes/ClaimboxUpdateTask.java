@@ -24,16 +24,16 @@ public class ClaimboxUpdateTask {
 
     public CompletableFuture<Unit> run() {
         return persistence.loadAll().exceptionally(t -> {
-                    t.printStackTrace();
-                    return null;
-                })
-                .thenApply(e -> Unit.UNIT);
+            t.printStackTrace();
+            return null;
+        }).thenApply(e -> Unit.UNIT);
     }
 
     public void schedule() {
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            run();
-            plugin.getLogger().info(() -> String.format("Updated %d Claimboxes from database", persistence.lookupAll().size()));
+            run().thenRun(() ->
+                    plugin.getLogger().info(() ->
+                            String.format("Updated %d Claimboxes from database", persistence.lookupAll().size())));
 
             schedule();
         }, configProvider.get().updateInterval() * 20L);

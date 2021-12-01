@@ -32,4 +32,9 @@ public class ClaimBox {
             consumer.accept(voucherIds);
         }
     }
+
+    @Override
+    public String toString() {
+        return "ClaimBox{" + "owner=" + owner + ", voucherIds=" + voucherIds + '}';
+    }
 }

@@ -79,10 +79,9 @@ public class ClaimBoxesCommand extends BaseCommand {
     @CommandPermission("claimbox.reset")
     public void resetSelf(Player player) {
         claimBoxManager.getBox(player.getUniqueId())
-                .thenAccept(box -> {
-                    claimBoxManager.reset(box);
-                    langService.send(player, ClaimBoxesLangConfig::claimboxReset);
-                }).exceptionally(e -> {
+                .thenCompose(claimBoxManager::reset)
+                .thenAccept(box -> langService.send(player, ClaimBoxesLangConfig::claimboxReset))
+                .exceptionally(e -> {
                     e.printStackTrace();
                     return null;
                 });
@@ -91,8 +90,9 @@ public class ClaimBoxesCommand extends BaseCommand {
     @Subcommand("resetall")
     @CommandPermission("resetall")
     public void resetAll(CommandSender sender) {
-        claimBoxManager.resetAll();
-        langService.send(sender, ClaimBoxesLangConfig::claimboxResetAll);
+        claimBoxManager.resetAll()
+                .thenRun(() ->
+                        langService.send(sender, ClaimBoxesLangConfig::claimboxResetAll));
     }
 
     @Subcommand("reset")
@@ -100,10 +100,9 @@ public class ClaimBoxesCommand extends BaseCommand {
     @CommandCompletion("@offlinePlayers")
     public void resetOther(Player player, OfflinePlayer target) {
         claimBoxManager.getBox(target.getUniqueId())
-                .thenAccept(box -> {
-                    claimBoxManager.reset(box);
-                    langService.send(player, ClaimBoxesLangConfig::claimboxReset, Maps.of(PLAYER, target.getName()));
-                }).exceptionally(e -> {
+                .thenCompose(claimBoxManager::reset)
+                .thenAccept(box -> langService.send(player, ClaimBoxesLangConfig::claimboxReset, Maps.of(PLAYER, target.getName())))
+                .exceptionally(e -> {
                     e.printStackTrace();
                     return null;
                 });
@@ -118,10 +117,9 @@ public class ClaimBoxesCommand extends BaseCommand {
             return;
         }
         claimBoxManager.getBox(target.getUniqueId())
-                .thenAccept(box -> {
-                    claimBoxManager.give(box, voucherId, arg);
-                    langService.send(sender, ClaimBoxesLangConfig::voucherGiven, Maps.of(PLAYER, target.getName(), "{id}", voucherId));
-                }).exceptionally(e -> {
+                .thenCompose(box -> claimBoxManager.give(box, voucherId, arg))
+                .thenAccept(box -> langService.send(sender, ClaimBoxesLangConfig::voucherGiven, Maps.of(PLAYER, target.getName(), "{id}", voucherId)))
+                .exceptionally(e -> {
                     e.printStackTrace();
                     return null;
                 });

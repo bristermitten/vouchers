@@ -13,9 +13,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class ClaimBoxManager {
+    private final Logger logger = Logger.getLogger("ClaimBoxManager");
     private final LuckPerms luckPerms;
     private final ClaimBoxStorage claimBoxStorage;
     private final SQLClaimBoxPersistence persistence;
@@ -27,9 +29,11 @@ public class ClaimBoxManager {
         this.persistence = persistence;
     }
 
-    public void reset(ClaimBox claimBox) {
+    public CompletableFuture<Void> reset(ClaimBox claimBox) {
+        logger.info(() -> "Resetting ClaimBox " + claimBox.getOwner());
         claimBox.editVoucherIds(List::clear);
-        persistence.save(claimBox)
+        return persistence.delete(claimBox.getOwner())
+                .thenRun(() -> logger.info(() -> "Saved ClaimBox from reset() " + claimBox.getOwner()))
                 .exceptionally(e -> {
                     e.printStackTrace();
                     return null;
@@ -37,13 +41,17 @@ public class ClaimBoxManager {
     }
 
     public CompletableFuture<ClaimBox> getBox(UUID owner) {
+        logger.info(() -> "Getting ClaimBox for " + owner);
         return claimBoxStorage.getOrCreate(owner);
     }
 
-    public void give(ClaimBox claimBox, String voucherId, @Nullable String arg) {
+    public CompletableFuture<Void> give(ClaimBox claimBox, String voucherId, @Nullable String arg) {
         final String voucherString = VoucherUtil.makeVoucherString(voucherId, arg);
+        logger.info(() -> "Giving voucher " + voucherString + " to " + claimBox.getOwner());
         claimBox.editVoucherIds(v -> v.add(voucherString));
-        persistence.addOne(claimBox.getOwner(), voucherString)
+        logger.info(() -> "Edited voucher list for " + claimBox.getOwner() + " to " + claimBox.getVoucherIds());
+        return persistence.addOne(claimBox.getOwner(), voucherString)
+                .thenRun(() -> logger.info(() -> "Saved ClaimBox from give() " + claimBox.getOwner()))
                 .exceptionally(e -> {
                     e.printStackTrace();
                     return null;
@@ -53,8 +61,11 @@ public class ClaimBoxManager {
 
     public void remove(ClaimBox claimBox, String voucherId, @Nullable String arg) {
         final String voucherString = VoucherUtil.makeVoucherString(voucherId, arg);
+        logger.info(() -> "Removing voucher " + voucherString + " from " + claimBox.getOwner());
         claimBox.editVoucherIds(v -> v.remove(voucherString));
+        logger.info(() -> "Edited voucher list for " + claimBox.getOwner() + " to " + claimBox.getVoucherIds());
         persistence.removeOne(claimBox.getOwner(), voucherString)
+                .thenRun(() -> logger.info(() -> "Saved ClaimBox from remove() " + claimBox.getOwner()))
                 .exceptionally(e -> {
                     e.printStackTrace();
                     return null;
@@ -87,8 +98,8 @@ public class ClaimBoxManager {
                 });
     }
 
-    public void resetAll() {
-        claimBoxStorage.loadAll()
+    public CompletableFuture<Void> resetAll() {
+        return claimBoxStorage.loadAll()
                 .thenRun(() -> {
                     for (ClaimBox value : claimBoxStorage.lookupAll().values()) {
                         reset(value);

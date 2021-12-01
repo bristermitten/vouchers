@@ -19,8 +19,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.concurrent.ExecutionException;
 
 public class ClaimBoxes extends JavaPlugin {
-    private @Inject
-    ClaimboxUpdateTask autoSaveTask;
+    @Inject
+    private ClaimboxUpdateTask autoSaveTask;
 
     @Override
     public void onEnable() {
@@ -36,28 +36,20 @@ public class ClaimBoxes extends JavaPlugin {
 
         final LuckPerms luckPerms = provider.getProvider();
 
-        final Injector injector = MittenLib.withDefaults(this)
-                .addConfigModules(ClaimBoxesConfig.CONFIG, ClaimBoxesLangConfig.CONFIG)
-                .addModule(new LuckPermsModule(luckPerms))
-                .addModule(new DatabaseModule())
-                .addModule(new ClaimBoxDataModule())
-                .addModule(new CommandsModule())
-                .build();
+        final Injector injector = MittenLib.withDefaults(this).addConfigModules(ClaimBoxesConfig.CONFIG, ClaimBoxesLangConfig.CONFIG)
+                .addModule(new LuckPermsModule(luckPerms)).addModule(new DatabaseModule()).addModule(new ClaimBoxDataModule()).addModule(new CommandsModule()).build();
 
-        injector.getInstance(BukkitCommandManager.class)
-                .registerCommand(injector.getInstance(ClaimBoxesCommand.class));
+        injector.getInstance(BukkitCommandManager.class).registerCommand(injector.getInstance(ClaimBoxesCommand.class));
 
         injector.injectMembers(this);
 
         autoSaveTask.schedule();
 
-
-        Bukkit.getScheduler().runTaskAsynchronously(this,
-                () -> injector.getInstance(ClaimBoxPersistence.class).init()
-                        .exceptionally(throwable -> {
-                            throwable.printStackTrace();
-                            return null;
-                        }));
+        injector.getInstance(ClaimBoxPersistence.class).init()
+                .exceptionally(throwable -> {
+                    throwable.printStackTrace();
+                    return null;
+                });
     }
 
     @Override
