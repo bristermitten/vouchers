@@ -13,6 +13,7 @@ public class DatabaseModule extends AbstractModule {
     protected void configure() {
         bind(Database.class).to(SQLDatabase.class);
         bind(HikariConfig.class).toProvider(HikariConfigurationProvider.class);
+        bind(JDBCURLFactory.class).to(MySQLJDBCURLFactory.class);
     }
 
     @Provides

@@ -2,10 +2,7 @@ package me.bristermitten.claimboxes.data;
 
 import org.jetbrains.annotations.UnmodifiableView;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class ClaimBox {
@@ -31,6 +28,19 @@ public class ClaimBox {
         synchronized (this) {
             consumer.accept(voucherIds);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ClaimBox claimBox = (ClaimBox) o;
+        return Objects.equals(getOwner(), claimBox.getOwner()) && Objects.equals(getVoucherIds(), claimBox.getVoucherIds());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getOwner(), getVoucherIds());
     }
 
     @Override

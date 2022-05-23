@@ -9,10 +9,12 @@ import javax.inject.Provider;
 
 public class HikariConfigurationProvider implements Provider<HikariConfig> {
     private final Provider<ClaimBoxesConfig.DatabaseConfig> configurationProvider;
+    private final JDBCURLFactory urlFactory;
 
     @Inject
-    public HikariConfigurationProvider(Provider<ClaimBoxesConfig.DatabaseConfig> configurationProvider) {
+    public HikariConfigurationProvider(Provider<ClaimBoxesConfig.DatabaseConfig> configurationProvider, JDBCURLFactory urlFactory) {
         this.configurationProvider = configurationProvider;
+        this.urlFactory = urlFactory;
     }
 
 
@@ -21,7 +23,7 @@ public class HikariConfigurationProvider implements Provider<HikariConfig> {
     public HikariConfig get() {
         ClaimBoxesConfig.DatabaseConfig config = configurationProvider.get();
         final HikariConfig hikariConfig = new HikariConfig();
-        final String jdbcURL = String.format("jdbc:mysql://%s:%d/%s", config.host(), config.port(), config.database());
+        final String jdbcURL = urlFactory.createURL(config);
         hikariConfig.setJdbcUrl(jdbcURL);
         hikariConfig.setUsername(config.username());
         hikariConfig.setPassword(config.password());
