@@ -22,15 +22,21 @@ public class SQLClaimBoxPersistence implements ClaimBoxPersistence {
         this.database = database;
     }
 
+
     @Override
     @NotNull
     public CompletableFuture<Unit> init() {
         return database.execute(
                 "create table if not exists claimbox_voucher_ids\n" +
-                "(\n" +
-                "    owner VARCHAR(36),\n" +
-                "    voucher_id  text\n" +
-                ")\n");
+                        "(\n" +
+                        "    owner VARCHAR(36),\n" +
+                        "    voucher_id  text\n" +
+                        ")\n");
+    }
+
+    @Override
+    public @NotNull CompletableFuture<Unit> cleanup() {
+        return Unit.unitFuture(); // Nothing to do
     }
 
     @Override

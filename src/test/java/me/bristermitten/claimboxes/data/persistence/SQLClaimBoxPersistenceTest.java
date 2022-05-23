@@ -2,7 +2,7 @@ package me.bristermitten.claimboxes.data.persistence;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import me.bristermitten.claimboxes.config.DatabaseConfig;
+import me.bristermitten.claimboxes.config.ClaimBoxesConfig;
 import me.bristermitten.claimboxes.data.ClaimBox;
 import me.bristermitten.claimboxes.database.Database;
 import me.bristermitten.claimboxes.database.HikariConfigurationProvider;
@@ -16,7 +16,7 @@ class SQLClaimBoxPersistenceTest {
 
     @Test
     void save() {
-        final HikariConfig hikariConfig = new HikariConfigurationProvider(() -> new DatabaseConfig("194.163.132.49", 3306, "u3_Bh7cOhECEd", "@ekNPyC^j8!GFG02dA9OR@=H", "s3_main")).get();
+        final HikariConfig hikariConfig = new HikariConfigurationProvider(() -> new ClaimBoxesConfig.DatabaseConfig("194.163.132.49", 3306, "u3_Bh7cOhECEd", "@ekNPyC^j8!GFG02dA9OR@=H", "s3_main")).get();
         final HikariDataSource hikariDataSource = new HikariDataSource(hikariConfig);
         Database database = new SQLDatabase(hikariDataSource);
 

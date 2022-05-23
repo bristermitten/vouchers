@@ -27,17 +27,21 @@ public class ClaimBoxes extends JavaPlugin {
 
         RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
         if (provider == null) {
-            for (int i = 0; i < 10; i++) {
-                getLogger().severe("LuckPerms not installed, ClaimBoxes shutting down.");
-            }
+            getLogger().severe("LuckPerms not installed, ClaimBoxes shutting down.");
             setEnabled(false);
             return;
         }
 
         final LuckPerms luckPerms = provider.getProvider();
 
-        final Injector injector = MittenLib.withDefaults(this).addConfigModules(ClaimBoxesConfig.CONFIG, ClaimBoxesLangConfig.CONFIG)
-                .addModule(new LuckPermsModule(luckPerms)).addModule(new DatabaseModule()).addModule(new ClaimBoxDataModule()).addModule(new CommandsModule()).build();
+        final Injector injector = MittenLib.withDefaults(this)
+                .addConfigModules(ClaimBoxesConfig.CONFIG, ClaimBoxesLangConfig.CONFIG)
+                .addModules(
+                        new LuckPermsModule(luckPerms),
+                        new DatabaseModule(),
+                        new ClaimBoxDataModule(),
+                        new CommandsModule())
+                .build();
 
         injector.getInstance(BukkitCommandManager.class).registerCommand(injector.getInstance(ClaimBoxesCommand.class));
 

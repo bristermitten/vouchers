@@ -1,6 +1,6 @@
 package me.bristermitten.claimboxes.menu;
 
-import me.bristermitten.claimboxes.config.ItemConfig;
+import me.bristermitten.claimboxes.config.ClaimBoxesConfig;
 import me.bristermitten.mittenlib.lang.format.MessageFormatter;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
@@ -16,7 +16,7 @@ public class MenuItems {
         this.messageFormatter = messageFormatter;
     }
 
-    public ItemStack toItem(ItemConfig config, OfflinePlayer viewer) {
+    public ItemStack toItem(ClaimBoxesConfig.ItemConfig config, OfflinePlayer viewer) {
         final ItemStack itemStack = new ItemStack(config.type(), 1, config.data());
         final ItemMeta meta = itemStack.getItemMeta();
         if (meta != null) {

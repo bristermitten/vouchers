@@ -21,20 +21,20 @@ public class ClaimBoxStorage extends CachingPersistence<UUID, ClaimBox> implemen
 
     @Override
     protected void addToCache(UUID id, ClaimBox data) {
-        logger.info("Adding " + id + ", " + data + " to cache");
+        logger.info(() -> "Adding " + id + ", " + data + " to cache");
         final ClaimBox claimBox = lookupAll().get(id);
         if (claimBox != null) {
-            logger.info("Found " + id + ", " + claimBox + " in cache");
+            logger.info(() -> "Found " + id + ", " + claimBox + " in cache");
             // there's already an element in the cache, so merge them
             claimBox.editVoucherIds(voucherIds -> {
                 voucherIds.clear();
                 voucherIds.addAll(data.getVoucherIds());
             });
-            logger.info("Merged " + id + ", " + claimBox + " in cache");
+            logger.info(() -> "Merged " + id + ", " + claimBox + " in cache");
             super.addToCache(id, claimBox);
             return;
         }
-        logger.info(id + " wasn't in cache, just adding");
+        logger.info(() -> id + " wasn't in cache, just adding");
         super.addToCache(id, data);
     }
 
