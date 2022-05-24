@@ -1,5 +1,6 @@
 package me.bristermitten.vouchers.data.voucher;
 
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.bristermitten.mittenlib.lang.format.MessageFormatter;
 import me.bristermitten.mittenlib.lang.format.hook.SimpleFormattingHook;
 import me.bristermitten.vouchers.data.voucher.type.VoucherType;
@@ -65,7 +66,10 @@ public class VoucherFactory {
                     .collect(Collectors.toList()));
         }
         item.setItemMeta(itemMeta);
-        return item;
+
+        NBTItem nbtItem = new NBTItem(item);
+        nbtItem.setString(Voucher.NBT_KEY, voucher.getId().toString());
+        return nbtItem.getItem();
     }
 }
 

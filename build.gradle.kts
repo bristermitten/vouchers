@@ -20,6 +20,7 @@ repositories {
     maven("https://repo.bristermitten.me/repository/maven-snapshots/")
     maven("https://repo.triumphteam.dev/releases/")
     maven("https://repo.aikar.co/content/groups/aikar/")
+    maven("https://repo.codemc.org/repository/maven-public/")
 }
 
 dependencies {
@@ -38,6 +39,7 @@ dependencies {
     implementation("mysql:mysql-connector-java:8.0.29")
 
     implementation("co.aikar:acf-paper:0.5.0-SNAPSHOT")
+    implementation("de.tr7zw:item-nbt-api:2.9.2")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testImplementation("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
@@ -62,7 +64,8 @@ tasks {
             "dev.triumphteam",
             "co.aikar.locales",
             "co.aikar.commands",
-            "net.kyori"
+            "net.kyori",
+            "de.tr7zw.changeme.nbtapi"
         ).forEach {
             relocate(it, "me.bristermitten.claimboxes.$it")
         }

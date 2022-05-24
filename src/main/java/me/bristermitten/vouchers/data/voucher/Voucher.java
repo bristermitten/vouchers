@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public class Voucher {
+    public static final String NBT_KEY = "MittenVoucher:Voucher";
     private final UUID id;
     private final @Nullable String data;
 
