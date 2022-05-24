@@ -1,0 +1,13 @@
+voucher-types:
+  money:
+    name: 'Money'
+    default-value: 100 # Value to use if not specified
+    item:
+      type: 'PAPER'
+      name: '&6&lMoney Voucher'
+      lore:
+        - '&7Click to redeem'
+        - '&6${value}'
+    actions:
+      - '[OP_COMMAND] eco give {player} {value}'
+      -

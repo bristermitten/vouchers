@@ -1,4 +1,4 @@
-name: ClaimBoxes
-main: me.bristermitten.claimboxes.ClaimBoxes
+name: MittenVouchers
+main: me.bristermitten.vouchers.MittenVouchers
 version: 1.0
 author: BristerMitten

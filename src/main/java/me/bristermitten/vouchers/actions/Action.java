@@ -1,0 +1,25 @@
+package me.bristermitten.vouchers.actions;
+
+import org.jetbrains.annotations.Nullable;
+
+public class Action {
+    private final ActionType type;
+    private final @Nullable String data;
+
+    public Action(ActionType type, @Nullable String data) {
+        this.type = type;
+        this.data = data;
+    }
+
+    public void run() {
+        type.execute(data);
+    }
+
+    public ActionType getType() {
+        return type;
+    }
+
+    public @Nullable String getData() {
+        return data;
+    }
+}
