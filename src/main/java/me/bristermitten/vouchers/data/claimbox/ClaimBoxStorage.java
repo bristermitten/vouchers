@@ -1,9 +1,9 @@
-package me.bristermitten.vouchers.data;
+package me.bristermitten.vouchers.data.claimbox;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import me.bristermitten.vouchers.data.persistence.SQLClaimBoxPersistence;
-import me.bristermitten.mittenlib.persistence.CachingPersistence;
+import me.bristermitten.vouchers.data.claimbox.persistence.SQLClaimBoxPersistence;
+import me.bristermitten.vouchers.persist.CachingPersistence;
 
 import java.util.Collections;
 import java.util.UUID;

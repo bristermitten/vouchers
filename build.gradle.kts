@@ -27,8 +27,9 @@ dependencies {
     compileOnly(files("lib/Vouchersv1.8.20_2.jar"))
     compileOnly("net.luckperms:api:5.4")
 
-    val mittenLibVersion = "1.0.4-SNAPSHOT"
+    val mittenLibVersion = "1.0.6-SNAPSHOT"
     implementation("me.bristermitten:mittenlib-core:$mittenLibVersion")
+    implementation("me.bristermitten:mittenlib-minimessage:$mittenLibVersion")
     annotationProcessor("me.bristermitten:mittenlib-annotation-processor:$mittenLibVersion")
 
     implementation("dev.triumphteam:triumph-gui:3.1.2")

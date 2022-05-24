@@ -1,4 +1,4 @@
-package me.bristermitten.vouchers.data;
+package me.bristermitten.vouchers.data.claimbox;
 
 import com.google.inject.AbstractModule;
 

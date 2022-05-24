@@ -11,11 +11,11 @@ public class ActionParser {
     private static final Pattern TAG_PATTERN =
             Pattern.compile("\\[([A-Z_]+)]( .+)?");
 
-    private final ActionTypeManager actionTypeManager;
+    private final ActionTypeRegistry actionTypeRegistry;
 
     @Inject
-    public ActionParser(ActionTypeManager actionTypeManager) {
-        this.actionTypeManager = actionTypeManager;
+    public ActionParser(ActionTypeRegistry actionTypeRegistry) {
+        this.actionTypeRegistry = actionTypeRegistry;
     }
 
     public Optional<Action> parse(@NotNull String input) {
@@ -26,7 +26,7 @@ public class ActionParser {
         final String tag = matcher.group(1);
         final String content = matcher.group(2).trim();
 
-        return actionTypeManager.getByTag(tag)
+        return actionTypeRegistry.getByTag(tag)
                 .map(type -> new Action(type, content));
     }
 }

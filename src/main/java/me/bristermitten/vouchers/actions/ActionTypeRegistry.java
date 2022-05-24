@@ -9,31 +9,31 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 @Singleton
-public class ActionTypeManager {
-    private final Map<String, ActionType> actionTypeRegistry = new HashMap<>();
+public class ActionTypeRegistry {
+    private final Map<String, ActionType> actionTypes = new HashMap<>();
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     @Inject
-    public ActionTypeManager(Collection<ActionType> standardActionTypes) {
+    public ActionTypeRegistry(Collection<ActionType> standardActionTypes) {
         for (ActionType actionType : standardActionTypes) {
             register(actionType);
         }
     }
 
     public Optional<ActionType> getByTag(String tag) {
-        return Optional.ofNullable(actionTypeRegistry.get(tag));
+        return Optional.ofNullable(actionTypes.get(tag));
     }
 
     public void register(ActionType actionType) {
-        if (actionTypeRegistry.put(actionType.getTag(), actionType) != null) {
+        if (actionTypes.put(actionType.getTag(), actionType) != null) {
             logger.warning(() ->
                     "Multiple action types registered with tag " + actionType.getTag() + ".");
         }
     }
 
     public void unregister(ActionType actionType) {
-        actionTypeRegistry.remove(actionType.getTag());
+        actionTypes.remove(actionType.getTag());
     }
 
 }

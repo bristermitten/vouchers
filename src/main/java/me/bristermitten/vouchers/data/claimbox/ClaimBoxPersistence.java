@@ -1,6 +1,6 @@
-package me.bristermitten.vouchers.data;
+package me.bristermitten.vouchers.data.claimbox;
 
-import me.bristermitten.mittenlib.persistence.Persistence;
+import me.bristermitten.vouchers.persist.Persistence;
 
 import java.util.UUID;
 

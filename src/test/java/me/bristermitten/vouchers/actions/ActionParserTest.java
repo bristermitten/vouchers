@@ -11,10 +11,10 @@ class ActionParserTest {
 
     @Test
     void parse() {
-        ActionTypeManager actionTypeManager = new ActionTypeManager(
+        ActionTypeRegistry actionTypeRegistry = new ActionTypeRegistry(
                 Collections.singletonList(new NOOPAction())
         );
-        ActionParser parser = new ActionParser(actionTypeManager);
+        ActionParser parser = new ActionParser(actionTypeRegistry);
 
         String input = "[NOOP] data";
         Optional<Action> parse = parser.parse(input);

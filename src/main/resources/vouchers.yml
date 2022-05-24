@@ -1,6 +1,5 @@
 voucher-types:
   money:
-    name: 'Money'
     default-value: 100 # Value to use if not specified
     item:
       type: 'PAPER'
