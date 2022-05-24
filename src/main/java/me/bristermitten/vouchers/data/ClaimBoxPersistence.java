@@ -1,4 +1,4 @@
-package me.bristermitten.vouchers.config.data;
+package me.bristermitten.vouchers.data;
 
 import me.bristermitten.mittenlib.persistence.Persistence;
 

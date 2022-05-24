@@ -1,7 +1,7 @@
 package me.bristermitten.vouchers;
 
 import me.bristermitten.vouchers.config.ClaimBoxesConfig;
-import me.bristermitten.vouchers.config.data.ClaimBoxStorage;
+import me.bristermitten.vouchers.data.ClaimBoxStorage;
 import me.bristermitten.mittenlib.util.Unit;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;

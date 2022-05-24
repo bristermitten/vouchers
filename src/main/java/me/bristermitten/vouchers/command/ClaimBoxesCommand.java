@@ -3,7 +3,7 @@ package me.bristermitten.vouchers.command;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import me.badbones69.vouchers.api.Vouchers;
-import me.bristermitten.vouchers.config.data.ClaimBoxManager;
+import me.bristermitten.vouchers.data.ClaimBoxManager;
 import me.bristermitten.vouchers.lang.ClaimBoxesLangConfig;
 import me.bristermitten.vouchers.lang.ClaimBoxesLangService;
 import me.bristermitten.vouchers.menu.ClaimBoxAdminMenuFactory;

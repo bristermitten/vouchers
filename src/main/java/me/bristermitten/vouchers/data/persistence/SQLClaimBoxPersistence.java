@@ -1,10 +1,10 @@
-package me.bristermitten.vouchers.config.data.persistence;
+package me.bristermitten.vouchers.data.persistence;
 
 import com.google.common.base.Functions;
 import com.google.inject.Inject;
 import me.bristermitten.mittenlib.util.Unit;
-import me.bristermitten.vouchers.config.data.ClaimBox;
-import me.bristermitten.vouchers.config.data.ClaimBoxPersistence;
+import me.bristermitten.vouchers.data.ClaimBox;
+import me.bristermitten.vouchers.data.ClaimBoxPersistence;
 import me.bristermitten.vouchers.database.Database;
 import org.jetbrains.annotations.NotNull;
 

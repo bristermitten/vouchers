@@ -1,8 +1,8 @@
-package me.bristermitten.vouchers.config.data;
+package me.bristermitten.vouchers.data;
 
 import com.google.inject.Inject;
 import me.bristermitten.vouchers.VoucherUtil;
-import me.bristermitten.vouchers.config.data.persistence.SQLClaimBoxPersistence;
+import me.bristermitten.vouchers.data.persistence.SQLClaimBoxPersistence;
 import me.bristermitten.mittenlib.util.Futures;
 import me.bristermitten.mittenlib.util.Unit;
 import net.luckperms.api.LuckPerms;
