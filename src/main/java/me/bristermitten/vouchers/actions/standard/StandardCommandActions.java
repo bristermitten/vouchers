@@ -9,5 +9,6 @@ public class StandardCommandActions extends AbstractModule {
     protected void configure() {
         Multibinder<ActionType> actionTypeMultibinder = Multibinder.newSetBinder(binder(), ActionType.class);
         actionTypeMultibinder.addBinding().to(OPCommandAction.class);
+        actionTypeMultibinder.addBinding().to(BroadcastAction.class);
     }
 }

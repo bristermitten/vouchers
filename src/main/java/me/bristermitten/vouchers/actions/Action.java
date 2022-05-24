@@ -1,5 +1,6 @@
 package me.bristermitten.vouchers.actions;
 
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 public class Action {
@@ -11,8 +12,8 @@ public class Action {
         this.data = data;
     }
 
-    public void run() {
-        type.execute(data);
+    public void run(@Nullable Player player) {
+        type.execute(data, player);
     }
 
     public ActionType getType() {

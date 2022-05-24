@@ -10,4 +10,4 @@ voucher-types:
         - '&6${value}'
     actions:
       - '[OP_COMMAND] eco give {player} {value}'
-      -
+      - '[BROADCAST] <green>{player} has redeemed a voucher for <gold>${value}</gold>!'
