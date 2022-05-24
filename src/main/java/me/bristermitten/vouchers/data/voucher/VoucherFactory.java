@@ -25,6 +25,16 @@ public class VoucherFactory {
         this.messageFormatter = messageFormatter;
     }
 
+    /**
+     * Creates and <b>does not</b> save a voucher based on a type and data
+     * If you want to create vouchers normally, use {@link VoucherRegistry#create(VoucherType, String)}
+     * <p>
+     * Aside from random UUID generation, this function is completely pure.
+     *
+     * @param type the type of voucher to create
+     * @param data the data to give the voucher
+     * @return the created voucher
+     */
     public Voucher createVoucher(VoucherType type, @Nullable String data) {
         return new Voucher(UUID.randomUUID(), data, type);
     }
@@ -54,6 +64,8 @@ public class VoucherFactory {
                     .map(s -> withValuePlaceholder.preFormat(s, player))
                     .collect(Collectors.toList()));
         }
+        item.setItemMeta(itemMeta);
         return item;
     }
 }
+

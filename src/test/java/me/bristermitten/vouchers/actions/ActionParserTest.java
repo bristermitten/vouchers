@@ -12,7 +12,7 @@ class ActionParserTest {
     @Test
     void parse() {
         ActionTypeRegistry actionTypeRegistry = new ActionTypeRegistry(
-                Collections.singletonList(new NOOPAction())
+                Collections.singleton(new NOOPAction())
         );
         ActionParser parser = new ActionParser(actionTypeRegistry);
 

@@ -25,9 +25,9 @@ repositories {
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
     compileOnly(files("lib/Vouchersv1.8.20_2.jar"))
-    compileOnly("net.luckperms:api:5.4")
+//    compileOnly("net.luckperms:api:5.4")
 
-    val mittenLibVersion = "1.0.6-SNAPSHOT"
+    val mittenLibVersion = "1.0.10-SNAPSHOT"
     implementation("me.bristermitten:mittenlib-core:$mittenLibVersion")
     implementation("me.bristermitten:mittenlib-minimessage:$mittenLibVersion")
     annotationProcessor("me.bristermitten:mittenlib-annotation-processor:$mittenLibVersion")
@@ -36,11 +36,6 @@ dependencies {
     @Suppress("GradlePackageUpdate") // Keeping this lower to support Java 8
     implementation("com.zaxxer:HikariCP:4.0.3")
     implementation("mysql:mysql-connector-java:8.0.29")
-
-
-    implementation("net.kyori:adventure-api:4.10.1")
-    implementation("net.kyori:adventure-platform-bukkit:4.1.0")
-    implementation("net.kyori:adventure-text-minimessage:4.10.1")
 
     implementation("co.aikar:acf-paper:0.5.0-SNAPSHOT")
 

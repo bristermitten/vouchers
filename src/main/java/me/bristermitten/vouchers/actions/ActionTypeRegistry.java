@@ -2,10 +2,7 @@ package me.bristermitten.vouchers.actions;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Logger;
 
 @Singleton
@@ -15,7 +12,7 @@ public class ActionTypeRegistry {
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     @Inject
-    public ActionTypeRegistry(Collection<ActionType> standardActionTypes) {
+    public ActionTypeRegistry(Set<ActionType> standardActionTypes) {
         for (ActionType actionType : standardActionTypes) {
             register(actionType);
         }
