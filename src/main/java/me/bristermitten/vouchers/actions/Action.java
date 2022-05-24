@@ -13,6 +13,10 @@ public class Action {
     }
 
     public void run(@Nullable Player player) {
+        this.run(player, data);
+    }
+
+    public void run(@Nullable Player player, @Nullable String data) {
         type.execute(data, player);
     }
 

@@ -3,14 +3,17 @@ package me.bristermitten.vouchers;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import me.bristermitten.mittenlib.MittenLib;
+import me.bristermitten.mittenlib.minimessage.MiniMessageModule;
 import me.bristermitten.vouchers.actions.ActionModule;
 import me.bristermitten.vouchers.command.CommandsModule;
 import me.bristermitten.vouchers.config.ClaimBoxesConfig;
 import me.bristermitten.vouchers.data.claimbox.ClaimBoxDataModule;
 import me.bristermitten.vouchers.data.claimbox.ClaimBoxPersistence;
 import me.bristermitten.vouchers.data.voucher.VoucherConfig;
+import me.bristermitten.vouchers.data.voucher.VoucherUsageListener;
 import me.bristermitten.vouchers.database.DatabaseModule;
 import me.bristermitten.vouchers.lang.ClaimBoxesLangConfig;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.concurrent.ExecutionException;
@@ -28,6 +31,7 @@ public class MittenVouchers extends JavaPlugin {
                         new DatabaseModule(),
                         new ClaimBoxDataModule(),
                         new ActionModule(),
+                        new MiniMessageModule(),
                         new CommandsModule())
                 .build();
 
@@ -40,6 +44,9 @@ public class MittenVouchers extends JavaPlugin {
                     throwable.printStackTrace();
                     return null;
                 });
+
+        VoucherUsageListener usageListener = injector.getInstance(VoucherUsageListener.class);
+        Bukkit.getPluginManager().registerEvents(usageListener, this);
     }
 
     @Override

@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -31,6 +32,10 @@ public class VoucherRegistry {
         Voucher voucher = factory.createVoucher(type, data);
         register(voucher);
         return voucher;
+    }
+
+    public Optional<Voucher> get(@NotNull UUID id) {
+        return Optional.ofNullable(voucherMap.get(id));
     }
 
     public ItemStack createVoucherItem(Voucher voucher, @Nullable Player receiver) {

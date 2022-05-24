@@ -17,8 +17,6 @@ import java.util.stream.Collectors;
 
 public class VoucherFactory {
 
-    private static final String DATA_PLACEHOLDER = "{value}";
-
     private final MessageFormatter messageFormatter;
 
     @Inject
@@ -50,7 +48,7 @@ public class VoucherFactory {
         final List<String> lore = descriptor.getLore();
 
         MessageFormatter withValuePlaceholder = data == null ? messageFormatter : messageFormatter.withExtraHooks(
-                new SimpleFormattingHook((s, p) -> s.replace(DATA_PLACEHOLDER, data))
+                new SimpleFormattingHook((s, p) -> s.replace(Voucher.DATA_PLACEHOLDER, data))
         );
         final ItemStack item = new ItemStack(type);
         ItemMeta itemMeta = item.getItemMeta();
