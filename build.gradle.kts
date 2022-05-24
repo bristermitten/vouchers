@@ -31,6 +31,7 @@ dependencies {
     val mittenLibVersion = "1.0.10-SNAPSHOT"
     implementation("me.bristermitten:mittenlib-core:$mittenLibVersion")
     implementation("me.bristermitten:mittenlib-minimessage:$mittenLibVersion")
+    implementation("me.bristermitten:mittenlib-papi:$mittenLibVersion")
     annotationProcessor("me.bristermitten:mittenlib-annotation-processor:$mittenLibVersion")
 
     implementation("dev.triumphteam:triumph-gui:3.1.2")

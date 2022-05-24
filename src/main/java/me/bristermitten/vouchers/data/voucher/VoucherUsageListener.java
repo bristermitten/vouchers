@@ -39,9 +39,12 @@ public class VoucherUsageListener implements Listener {
         Voucher voucher = voucherOptional.get();
         if (voucher.isUsed()) {
             logger.warning(() -> "Voucher with id " + id + " has already been used");
+            event.getPlayer().getInventory().remove(item);
             event.setCancelled(true);
             return;
         }
         voucher.use(event.getPlayer());
+        event.setCancelled(true);
+        event.getPlayer().getInventory().remove(item);
     }
 }

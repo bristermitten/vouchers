@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import me.bristermitten.mittenlib.MittenLib;
 import me.bristermitten.mittenlib.minimessage.MiniMessageModule;
+import me.bristermitten.mittenlib.papi.PAPIModule;
 import me.bristermitten.vouchers.actions.ActionModule;
 import me.bristermitten.vouchers.command.CommandsModule;
 import me.bristermitten.vouchers.config.ClaimBoxesConfig;
@@ -32,6 +33,7 @@ public class MittenVouchers extends JavaPlugin {
                         new ClaimBoxDataModule(),
                         new ActionModule(),
                         new MiniMessageModule(),
+                        new PAPIModule(),
                         new CommandsModule())
                 .build();
 
