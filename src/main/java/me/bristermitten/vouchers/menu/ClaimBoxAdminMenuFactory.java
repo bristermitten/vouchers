@@ -3,20 +3,19 @@ package me.bristermitten.vouchers.menu;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
 import dev.triumphteam.gui.guis.PaginatedGui;
-import me.badbones69.vouchers.api.Vouchers;
-import me.badbones69.vouchers.api.objects.Voucher;
+import me.bristermitten.mittenlib.lang.format.MessageFormatter;
 import me.bristermitten.vouchers.config.ClaimBoxesConfig;
 import me.bristermitten.vouchers.data.claimbox.ClaimBox;
 import me.bristermitten.vouchers.data.claimbox.ClaimBoxManager;
-import me.bristermitten.mittenlib.lang.format.MessageFormatter;
+import me.bristermitten.vouchers.data.voucher.Voucher;
+import me.bristermitten.vouchers.data.voucher.VoucherRegistry;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.List;
+import java.util.Optional;
 
 public class ClaimBoxAdminMenuFactory {
     private final Provider<ClaimBoxesConfig> configProvider;
@@ -24,22 +23,20 @@ public class ClaimBoxAdminMenuFactory {
     private final MenuItems menuItems;
     private final ClaimBoxManager claimBoxManager;
 
+    private final VoucherRegistry voucherRegistry;
+
     @Inject
-    public ClaimBoxAdminMenuFactory(Provider<ClaimBoxesConfig> configProvider, MessageFormatter messageFormatter, MenuItems menuItems, ClaimBoxManager claimBoxManager) {
+    public ClaimBoxAdminMenuFactory(Provider<ClaimBoxesConfig> configProvider, MessageFormatter messageFormatter, MenuItems menuItems, ClaimBoxManager claimBoxManager, VoucherRegistry voucherRegistry) {
         this.configProvider = configProvider;
         this.messageFormatter = messageFormatter;
         this.menuItems = menuItems;
         this.claimBoxManager = claimBoxManager;
+        this.voucherRegistry = voucherRegistry;
     }
 
-    public GuiItem createItem(ClaimBox box, String voucherId, @Nullable String args) {
-        final Voucher voucher = Vouchers.getVoucher(voucherId);
-        if (voucher == null) {
-            throw new IllegalArgumentException("Unknown voucher " + voucherId);
-        }
-
-        final ItemStack item = args == null ? voucher.buildItem() : voucher.buildItem(args);
-        return new GuiItem(item, event -> claimBoxManager.remove(box, voucherId, args));
+    public GuiItem createItem(ClaimBox box, me.bristermitten.vouchers.data.voucher.Voucher voucher) {
+        final ItemStack item = voucherRegistry.createVoucherItem(voucher, null);
+        return new GuiItem(item, event -> claimBoxManager.remove(box, voucher));
     }
 
 
@@ -67,25 +64,21 @@ public class ClaimBoxAdminMenuFactory {
             if (cursor == null || cursor.getType() == Material.AIR) {
                 return;
             }
-            final Voucher voucherFromItem = Vouchers.getVoucherFromItem(cursor);
-            if (voucherFromItem == null) {
+            final Optional<Voucher> voucherFromItemOpt = voucherRegistry.lookupFromItem(cursor);
+            if (!voucherFromItemOpt.isPresent()) {
                 return;
             }
-            final String argument = Vouchers.getArgument(cursor, voucherFromItem);
+            final Voucher voucherFromItem = voucherFromItemOpt.get();
             if (event.getClickedInventory() == event.getView().getTopInventory()) {
-                claimBoxManager.give(claimBox, voucherFromItem.getName(), argument);
+                claimBoxManager.give(claimBox, voucherFromItem);
             } else {
-                claimBoxManager.remove(claimBox, voucherFromItem.getName(), argument);
+                claimBoxManager.remove(claimBox, voucherFromItem);
             }
         });
 
 
-        final List<String> voucherIds = claimBox.getVoucherIds();
-        for (String voucherData : voucherIds) {
-            String[] parts = voucherData.split(" ");
-            String voucherId = parts[0];
-            final String arg = parts.length == 1 ? null : parts[1];
-            gui.addItem(createItem(claimBox, voucherId, arg));
+        for (Voucher voucher : claimBox.getVouchers()) {
+            gui.addItem(createItem(claimBox, voucher));
         }
 
         return gui;

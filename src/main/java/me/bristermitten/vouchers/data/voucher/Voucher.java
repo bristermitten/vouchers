@@ -14,12 +14,17 @@ public class Voucher {
     private final @Nullable String data;
     private final VoucherType type;
 
-    private boolean used = false;
+    private boolean used;
 
     public Voucher(UUID id, @Nullable String data, VoucherType type) {
+        this(id, data, type, false);
+    }
+
+    public Voucher(UUID id, @Nullable String data, VoucherType type, boolean used) {
         this.id = id;
         this.data = data;
         this.type = type;
+        this.used = used;
     }
 
     public VoucherType getType() {

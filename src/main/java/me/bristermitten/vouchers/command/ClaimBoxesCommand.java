@@ -2,17 +2,15 @@ package me.bristermitten.vouchers.command;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
-import me.badbones69.vouchers.api.Vouchers;
+import me.bristermitten.mittenlib.collections.Maps;
 import me.bristermitten.vouchers.data.claimbox.ClaimBoxManager;
 import me.bristermitten.vouchers.lang.ClaimBoxesLangConfig;
 import me.bristermitten.vouchers.lang.ClaimBoxesLangService;
 import me.bristermitten.vouchers.menu.ClaimBoxAdminMenuFactory;
 import me.bristermitten.vouchers.menu.ClaimBoxMenuFactory;
-import me.bristermitten.mittenlib.collections.Maps;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 
@@ -37,7 +35,7 @@ public class ClaimBoxesCommand extends BaseCommand {
     public void onSelfOpen(Player player) {
         claimBoxManager.getBox(player.getUniqueId())
                 .thenAccept(box -> {
-                    if (box.getVoucherIds().isEmpty()) {
+                    if (box.getVouchers().isEmpty()) {
                         langService.send(player, conf -> conf.errors().claimboxEmpty());
                         return;
                     }
@@ -54,7 +52,7 @@ public class ClaimBoxesCommand extends BaseCommand {
     public void openOther(Player player, OfflinePlayer target) {
         claimBoxManager.getBox(target.getUniqueId())
                 .thenAccept(box -> {
-                    if (box.getVoucherIds().isEmpty()) {
+                    if (box.getVouchers().isEmpty()) {
                         langService.send(player, conf -> conf.errors().claimboxEmptyOther(), Maps.of(PLAYER, target.getName()));
                         return;
                     }
@@ -108,35 +106,35 @@ public class ClaimBoxesCommand extends BaseCommand {
                 });
     }
 
-    @Subcommand("give")
-    @CommandPermission("claimbox.give")
-    @CommandCompletion("@offlinePlayers")
-    public void give(CommandSender sender, OfflinePlayer target, String voucherId, @Optional @Nullable String arg) {
-        if (Vouchers.getVoucher(voucherId) == null) {
-            langService.send(sender, conf -> conf.errors().unknownVoucher(), Maps.of("{id}", voucherId));
-            return;
-        }
-        claimBoxManager.getBox(target.getUniqueId())
-                .thenCompose(box -> claimBoxManager.give(box, voucherId, arg))
-                .thenAccept(box -> langService.send(sender, ClaimBoxesLangConfig::voucherGiven, Maps.of(PLAYER, target.getName(), "{id}", voucherId)))
-                .exceptionally(e -> {
-                    e.printStackTrace();
-                    return null;
-                });
-
-    }
-
-    @Subcommand("giveall")
-    @CommandPermission("claimbox.giveall")
-    public void giveAll(CommandSender sender, String targetGroup, boolean online, String voucherId, @Optional @Nullable String arg) {
-        claimBoxManager.giveAll(targetGroup, online, voucherId, arg)
-                .thenAccept(box ->
-                        langService.send(sender, ClaimBoxesLangConfig::voucherGivenAll,
-                                Maps.of("{group}", targetGroup, "{id}", voucherId)))
-                .exceptionally(e -> {
-                    e.printStackTrace();
-                    return null;
-                });
-    }
+//    @Subcommand("give")
+//    @CommandPermission("claimbox.give")
+//    @CommandCompletion("@offlinePlayers")
+//    public void give(CommandSender sender, OfflinePlayer target, String voucherId, @Optional @Nullable String arg) {
+//        if (Vouchers.getVoucher(voucherId) == null) {
+//            langService.send(sender, conf -> conf.errors().unknownVoucher(), Maps.of("{id}", voucherId));
+//            return;
+//        }
+//        claimBoxManager.getBox(target.getUniqueId())
+//                .thenCompose(box -> claimBoxManager.give(box, voucherId, arg))
+//                .thenAccept(box -> langService.send(sender, ClaimBoxesLangConfig::voucherGiven, Maps.of(PLAYER, target.getName(), "{id}", voucherId)))
+//                .exceptionally(e -> {
+//                    e.printStackTrace();
+//                    return null;
+//                });
+//
+//    }
+//
+//    @Subcommand("giveall")
+//    @CommandPermission("claimbox.giveall")
+//    public void giveAll(CommandSender sender, String targetGroup, boolean online, String voucherId, @Optional @Nullable String arg) {
+//        claimBoxManager.giveAll(targetGroup, online, voucherId, arg)
+//                .thenAccept(box ->
+//                        langService.send(sender, ClaimBoxesLangConfig::voucherGivenAll,
+//                                Maps.of("{group}", targetGroup, "{id}", voucherId)))
+//                .exceptionally(e -> {
+//                    e.printStackTrace();
+//                    return null;
+//                });
+//    } TODO figure out what to do with these
 
 }

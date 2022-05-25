@@ -4,6 +4,7 @@ import me.bristermitten.mittenlib.util.Unit;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -35,7 +36,10 @@ public interface Persistence<I, T> {
      *
      * @return A future that completes when the cleanup stage finishes
      */
-    @NotNull CompletableFuture<Unit> cleanup();
+    @NotNull
+    default CompletableFuture<Unit> cleanup() {
+        return Unit.unitFuture();
+    }
 
     /**
      * Save a value to the Persistence's source
@@ -43,7 +47,9 @@ public interface Persistence<I, T> {
      * @param value the value to save
      * @return A future that completes when the save finishes
      */
-    @NotNull CompletableFuture<Unit> save(@NotNull T value);
+    default @NotNull CompletableFuture<Unit> save(@NotNull T value) {
+        return saveAll(Collections.singletonList(value));
+    }
 
     /**
      * Load a value from the Persistence by its ID
@@ -67,6 +73,7 @@ public interface Persistence<I, T> {
      * Load all the values from the Persistence's backend. No guarantee is made about the
      * returned {@link Collection}'s implementation, but it must contain all values from the
      * backend once and once only.
+     *
      * @return A future that holds all the values in the Persistence's backend
      */
     @NotNull CompletableFuture<Collection<T>> loadAll();
@@ -78,6 +85,7 @@ public interface Persistence<I, T> {
      * for a SQL database).
      * This method should override any <i>duplicate</i> values in the persistence, but preserve
      * any values that are not in the given collection
+     *
      * @param values The values to save.
      * @return A future that completes when all the values are saved.
      */

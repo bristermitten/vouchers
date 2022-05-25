@@ -1,5 +1,6 @@
 package me.bristermitten.vouchers.data.claimbox;
 
+import me.bristermitten.vouchers.data.voucher.Voucher;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.*;
@@ -7,11 +8,11 @@ import java.util.function.Consumer;
 
 public class ClaimBox {
     private final UUID owner;
-    private final List<String> voucherIds;
+    private final Set<Voucher> vouchers;
 
-    public ClaimBox(UUID owner, List<String> voucherIds) {
+    public ClaimBox(UUID owner, Set<Voucher> vouchers) {
         this.owner = owner;
-        this.voucherIds = new ArrayList<>(voucherIds);
+        this.vouchers = new HashSet<>(vouchers);
     }
 
 
@@ -20,13 +21,13 @@ public class ClaimBox {
     }
 
     @UnmodifiableView
-    public List<String> getVoucherIds() {
-        return Collections.unmodifiableList(voucherIds);
+    public Set<Voucher> getVouchers() {
+        return Collections.unmodifiableSet(vouchers);
     }
 
-    public void editVoucherIds(Consumer<List<String>> consumer) {
+    public void editVouchers(Consumer<Set<Voucher>> consumer) {
         synchronized (this) {
-            consumer.accept(voucherIds);
+            consumer.accept(vouchers);
         }
     }
 
@@ -35,16 +36,16 @@ public class ClaimBox {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ClaimBox claimBox = (ClaimBox) o;
-        return Objects.equals(getOwner(), claimBox.getOwner()) && Objects.equals(getVoucherIds(), claimBox.getVoucherIds());
+        return Objects.equals(getOwner(), claimBox.getOwner()) && Objects.equals(getVouchers(), claimBox.getVouchers());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getOwner(), getVoucherIds());
+        return Objects.hash(getOwner(), getVouchers());
     }
 
     @Override
     public String toString() {
-        return "ClaimBox{" + "owner=" + owner + ", voucherIds=" + voucherIds + '}';
+        return "ClaimBox{" + "owner=" + owner + ", vouchers=" + vouchers + '}';
     }
 }

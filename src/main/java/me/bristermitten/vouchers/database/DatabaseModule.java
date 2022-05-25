@@ -5,6 +5,7 @@ import com.google.inject.Provides;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import me.bristermitten.vouchers.config.ClaimBoxesConfig;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Provider;
 
@@ -17,8 +18,8 @@ public class DatabaseModule extends AbstractModule {
     }
 
     @Provides
-    public ClaimBoxesConfig.DatabaseConfig getDatabaseConfig(Provider<ClaimBoxesConfig> configProvider) {
-        return configProvider.get().database();
+    public @Nullable ClaimBoxesConfig.DatabaseConfig getDatabaseConfig(Provider<ClaimBoxesConfig> configProvider) {
+        return configProvider.get().storage().database();
     }
 
     @Provides

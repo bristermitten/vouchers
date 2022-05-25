@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import me.bristermitten.mittenlib.util.Unit;
 import me.bristermitten.mittenlib.util.lambda.Functions;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.Collection;
@@ -19,9 +20,9 @@ import static java.util.Optional.of;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 
 public class CachingPersistence<I, T> implements Persistence<I, T> {
+    protected final Cache<I, T> cache = createCache();
     private final Persistence<I, T> delegate;
     private final Function<T, I> idFunction;
-    private final Cache<I, T> cache = createCache();
 
     public CachingPersistence(Persistence<I, T> delegate, Function<T, I> idFunction) {
         this.delegate = delegate;
@@ -32,8 +33,10 @@ public class CachingPersistence<I, T> implements Persistence<I, T> {
         return CacheBuilder.newBuilder().build();
     }
 
-    protected void addToCache(I id, T data) {
+    protected @Nullable T addToCache(I id, T data) {
+        T previous = cache.getIfPresent(id);
         cache.put(id, data);
+        return previous;
     }
 
     protected void addToCache(T data) {
@@ -69,10 +72,16 @@ public class CachingPersistence<I, T> implements Persistence<I, T> {
         if (ifPresent != null) {
             return completedFuture(of((ifPresent)));
         }
-        return lookup(id);
+        return findInDatabase(id);
     }
 
-    private CompletableFuture<Optional<T>> lookup(@NotNull I id) {
+    public @NotNull Optional<T> lookup(@NotNull I id) {
+        return Optional.ofNullable(
+                cache.getIfPresent(id)
+        );
+    }
+
+    private CompletableFuture<Optional<T>> findInDatabase(@NotNull I id) {
         return delegate.load(id)
                 .whenComplete((o, t) -> {
                     if (t != null) {

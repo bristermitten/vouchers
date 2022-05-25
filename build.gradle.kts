@@ -25,10 +25,9 @@ repositories {
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
-    compileOnly(files("lib/Vouchersv1.8.20_2.jar"))
 //    compileOnly("net.luckperms:api:5.4")
 
-    val mittenLibVersion = "1.0.10-SNAPSHOT"
+    val mittenLibVersion = "1.0.11-SNAPSHOT"
     implementation("me.bristermitten:mittenlib-core:$mittenLibVersion")
     implementation("me.bristermitten:mittenlib-minimessage:$mittenLibVersion")
     implementation("me.bristermitten:mittenlib-papi:$mittenLibVersion")

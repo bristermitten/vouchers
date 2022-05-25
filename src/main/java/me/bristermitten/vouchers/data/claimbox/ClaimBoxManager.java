@@ -2,11 +2,10 @@ package me.bristermitten.vouchers.data.claimbox;
 
 import com.google.inject.Inject;
 import me.bristermitten.mittenlib.util.Unit;
-import me.bristermitten.vouchers.VoucherUtil;
 import me.bristermitten.vouchers.data.claimbox.persistence.SQLClaimBoxPersistence;
+import me.bristermitten.vouchers.data.voucher.Voucher;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -22,7 +21,7 @@ public class ClaimBoxManager {
     }
 
     public CompletableFuture<Unit> reset(ClaimBox claimBox) {
-        claimBox.editVoucherIds(List::clear);
+        claimBox.editVouchers(Set::clear);
         return persistence.delete(claimBox.getOwner())
                 .exceptionally(e -> {
                     e.printStackTrace();
@@ -34,10 +33,9 @@ public class ClaimBoxManager {
         return claimBoxStorage.getOrCreate(owner);
     }
 
-    public CompletableFuture<Unit> give(ClaimBox claimBox, String voucherId, @Nullable String arg) {
-        final String voucherString = VoucherUtil.makeVoucherString(voucherId, arg);
-        claimBox.editVoucherIds(v -> v.add(voucherString));
-        return persistence.addOne(claimBox.getOwner(), voucherString)
+    public CompletableFuture<Unit> give(ClaimBox claimBox, Voucher voucher) {
+        claimBox.editVouchers(v -> v.add(voucher));
+        return persistence.addOne(claimBox.getOwner(), voucher)
                 .exceptionally(e -> {
                     e.printStackTrace();
                     return null;
@@ -45,10 +43,9 @@ public class ClaimBoxManager {
     }
 
 
-    public void remove(ClaimBox claimBox, String voucherId, @Nullable String arg) {
-        final String voucherString = VoucherUtil.makeVoucherString(voucherId, arg);
-        claimBox.editVoucherIds(v -> v.remove(voucherString));
-        persistence.removeOne(claimBox.getOwner(), voucherString)
+    public void remove(ClaimBox claimBox, Voucher voucher) {
+        claimBox.editVouchers(v -> v.remove(voucher));
+        persistence.removeOne(claimBox.getOwner(), voucher)
                 .exceptionally(e -> {
                     e.printStackTrace();
                     return null;

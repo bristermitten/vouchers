@@ -1,7 +1,7 @@
-package me.bristermitten.vouchers.data.claimbox;
+package me.bristermitten.vouchers.data.claimbox.persistence;
 
 import com.google.inject.Inject;
-import me.bristermitten.vouchers.data.claimbox.persistence.SQLClaimBoxPersistence;
+import me.bristermitten.vouchers.data.claimbox.ClaimBox;
 import me.bristermitten.vouchers.persist.Persistences;
 import org.jetbrains.annotations.NotNull;
 

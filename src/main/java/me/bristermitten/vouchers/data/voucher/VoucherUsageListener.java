@@ -31,7 +31,7 @@ public class VoucherUsageListener implements Listener {
         if (Boolean.FALSE.equals(nbtItem.hasKey(Voucher.NBT_KEY))) return;
         UUID id = UUID.fromString(nbtItem.getString(Voucher.NBT_KEY));
 
-        Optional<Voucher> voucherOptional = voucherRegistry.get(id);
+        Optional<Voucher> voucherOptional = voucherRegistry.lookup(id);
         if (!voucherOptional.isPresent()) {
             logger.warning(() -> "Voucher with id " + id + " not found");
             return;
