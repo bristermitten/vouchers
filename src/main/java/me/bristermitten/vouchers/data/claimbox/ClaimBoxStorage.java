@@ -1,11 +1,11 @@
 package me.bristermitten.vouchers.data.claimbox;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import me.bristermitten.vouchers.data.claimbox.persistence.ClaimBoxPersistence;
 import me.bristermitten.vouchers.data.claimbox.persistence.SQLClaimBoxPersistence;
 import me.bristermitten.vouchers.persist.CachingPersistence;
 
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;

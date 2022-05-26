@@ -1,9 +1,8 @@
 package me.bristermitten.vouchers.data.claimbox.persistence;
 
-import com.google.common.base.Functions;
-import com.google.inject.Inject;
 import me.bristermitten.mittenlib.util.Result;
 import me.bristermitten.mittenlib.util.Unit;
+import me.bristermitten.mittenlib.util.lambda.Functions;
 import me.bristermitten.vouchers.data.claimbox.ClaimBox;
 import me.bristermitten.vouchers.data.voucher.Voucher;
 import me.bristermitten.vouchers.data.voucher.VoucherRegistry;
@@ -13,6 +12,7 @@ import me.bristermitten.vouchers.util.Pair;
 import me.bristermitten.vouchers.util.ResultSetUtil;
 import org.jetbrains.annotations.NotNull;
 
+import javax.inject.Inject;
 import java.sql.ResultSet;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;

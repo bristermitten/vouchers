@@ -3,7 +3,6 @@ package me.bristermitten.vouchers.persist;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import me.bristermitten.mittenlib.util.Unit;
-import me.bristermitten.mittenlib.util.lambda.Functions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -120,8 +119,7 @@ public class CachingPersistence<I, T> implements Persistence<I, T> {
 
     @Override
     public @NotNull CompletableFuture<Unit> saveAll(@NotNull Collection<T> values) {
-        return CompletableFuture
-                .allOf(values.stream().map(this::save).toArray(CompletableFuture[]::new))
-                .thenCompose(Functions.constant(Unit.unitFuture()));
+        values.forEach(this::addToCache);
+        return delegate.saveAll(values);
     }
 }

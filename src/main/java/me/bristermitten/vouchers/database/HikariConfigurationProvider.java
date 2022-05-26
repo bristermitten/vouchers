@@ -1,10 +1,10 @@
 package me.bristermitten.vouchers.database;
 
-import com.google.inject.Inject;
 import com.zaxxer.hikari.HikariConfig;
 import me.bristermitten.vouchers.config.ClaimBoxesConfig;
 import org.jetbrains.annotations.NotNull;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 
 public class HikariConfigurationProvider implements Provider<HikariConfig> {
