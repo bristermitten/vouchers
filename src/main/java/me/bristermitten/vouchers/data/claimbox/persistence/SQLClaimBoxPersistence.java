@@ -1,8 +1,8 @@
 package me.bristermitten.vouchers.data.claimbox.persistence;
 
+import me.bristermitten.mittenlib.util.Futures;
 import me.bristermitten.mittenlib.util.Result;
 import me.bristermitten.mittenlib.util.Unit;
-import me.bristermitten.mittenlib.util.lambda.Functions;
 import me.bristermitten.vouchers.data.claimbox.ClaimBox;
 import me.bristermitten.vouchers.data.voucher.Voucher;
 import me.bristermitten.vouchers.data.voucher.VoucherRegistry;
@@ -41,89 +41,72 @@ public class SQLClaimBoxPersistence implements ClaimBoxPersistence {
     @Override
     @NotNull
     public CompletableFuture<Unit> init() {
-        return database.execute(
-                "create table if not exists " + tableName() + "\n" +
-                        "(\n" +
-                        "    owner VARCHAR(36),\n" +
-                        "    voucher_id VARCHAR(36) REFERENCES " + tnf.getTableName("Vouchers") + "(id) \n" +
-                        ")\n");
-    }
-
-    @Override
-    public @NotNull CompletableFuture<Unit> save(@NotNull ClaimBox claimBox) {
-        return delete(claimBox.getOwner()).thenCompose(e ->
-                database.runTransactionally(db -> db.runWithStatement("INSERT INTO " + tableName() + " (owner, voucher_id) values (?, ?)", preparedStatement -> {
-                    for (Voucher voucher : claimBox.getVouchers()) {
-                        preparedStatement.setString(1, claimBox.getOwner().toString());
-                        preparedStatement.setString(2, voucher.getId().toString());
-                        preparedStatement.addBatch();
-                    }
-                    preparedStatement.executeBatch();
-                    return null;
-                })));
+        return database.execute("create table if not exists " + tableName() + "\n" + "(\n" + "    owner VARCHAR(36),\n" + "    voucher_id VARCHAR(36) REFERENCES " + tnf.getTableName("Vouchers") + "(id) \n" + ")\n");
     }
 
     @Override
     public @NotNull CompletableFuture<Optional<ClaimBox>> load(@NotNull UUID id) {
-        return database.query("SELECT * FROM " + tableName() + " WHERE owner = ?",
-                statement -> statement.setString(1, id.toString()),
-                results -> claimBoxesFromResultSet(results).stream().findFirst());
+        return database.query("SELECT * FROM " + tableName() + " WHERE owner = ?", statement -> statement.setString(1, id.toString()), results -> claimBoxesFromResultSet(results).stream().findFirst());
     }
 
     @NotNull
     private Collection<ClaimBox> claimBoxesFromResultSet(ResultSet results) {
-        Map<UUID, Set<Voucher>> claimBoxes = ResultSetUtil.getRows(results)
-                .map(row -> Result.runCatching(() -> {
-                    UUID uuid = UUID.fromString(results.getString(1));
-                    UUID voucherId = UUID.fromString(results.getString(2));
-                    Voucher voucher = voucherRegistry.load(voucherId)
-                            .join().orElseThrow(() -> new IllegalStateException("Voucher with ID " + voucherId + " not found"));
-                    return Pair.of(uuid, voucher);
-                }).getOrThrow())
-                .collect(groupingBy(Pair::getFirst, mapping(Pair::getSecond, toSet())));
+        Map<UUID, Set<Voucher>> claimBoxes = ResultSetUtil.getRows(results).map(row -> Result.runCatching(() -> {
+            UUID uuid = UUID.fromString(results.getString(1));
+            UUID voucherId = UUID.fromString(results.getString(2));
+            Voucher voucher = voucherRegistry.load(voucherId).join().orElseThrow(() -> new IllegalStateException("Voucher with ID " + voucherId + " not found"));
+            return Pair.of(uuid, voucher);
+        }).getOrThrow()).collect(groupingBy(Pair::getFirst, mapping(Pair::getSecond, toSet())));
 
-        return claimBoxes.entrySet().stream()
-                .map(e -> new ClaimBox(e.getKey(), e.getValue()))
-                .collect(toList());
+        return claimBoxes.entrySet().stream().map(e -> new ClaimBox(e.getKey(), e.getValue())).collect(toList());
     }
 
     @Override
     public @NotNull CompletableFuture<Unit> delete(@NotNull UUID id) {
-        return database.execute("DELETE FROM " + tableName() + " WHERE owner = ?",
-                statement -> statement.setString(1, id.toString()));
+        return delete(id, database);
+    }
+
+    private @NotNull CompletableFuture<Unit> delete(@NotNull UUID id, Database database) {
+        return database.execute("DELETE FROM " + tableName() + " WHERE owner = ?", statement -> statement.setString(1, id.toString()));
     }
 
     @NotNull
     public CompletableFuture<Unit> removeOne(@NotNull UUID id, Voucher voucher) {
-        return database.execute("DELETE FROM " + tableName() + " WHERE owner = ? AND voucher_id = ? LIMIT 1",
-                statement -> {
-                    statement.setString(1, id.toString());
-                    statement.setString(2, voucher.getId().toString());
-                });
+        return database.execute("DELETE FROM " + tableName() + " WHERE owner = ? AND voucher_id = ? LIMIT 1", statement -> {
+            statement.setString(1, id.toString());
+            statement.setString(2, voucher.getId().toString());
+        });
     }
 
     @NotNull
     public CompletableFuture<Unit> addOne(@NotNull UUID id, Voucher voucherId) {
-        return database.execute("INSERT INTO " + tableName() + " (owner, voucher_id) values (?, ?)",
-                preparedStatement -> {
-                    preparedStatement.setString(1, id.toString());
-                    preparedStatement.setString(2, voucherId.toString());
-                });
+        return database.execute("INSERT INTO " + tableName() + " (owner, voucher_id) values (?, ?)", preparedStatement -> {
+            preparedStatement.setString(1, id.toString());
+            preparedStatement.setString(2, voucherId.toString());
+        });
     }
 
     @Override
     public @NotNull CompletableFuture<Collection<ClaimBox>> loadAll() {
-        return database.query("SELECT * from " + tableName(),
-                statement -> {
-                },
-                this::claimBoxesFromResultSet);
+        return database.query("SELECT * from " + tableName(), statement -> {
+        }, this::claimBoxesFromResultSet);
     }
 
     @Override
     @NotNull
     public CompletableFuture<Unit> saveAll(@NotNull Collection<ClaimBox> values) {
-        return CompletableFuture
-                .allOf(values.stream().map(this::save).toArray(CompletableFuture[]::new))
-                .thenCompose(Functions.constant(Unit.unitFuture())); // TODO optimize this to be in 1 transaction
+        return database.runTransactionally(db -> {
+            List<CompletableFuture<Unit>> futures = values.stream().map(box -> delete(box.getOwner(), db).
+                    thenCompose(e -> db.runWithStatement("INSERT INTO " + tableName() + " (owner, voucher_id) values (?, ?)", preparedStatement -> {
+                        for (Voucher voucher : box.getVouchers()) {
+                            preparedStatement.setString(1, box.getOwner().toString());
+                            preparedStatement.setString(2, voucher.getId().toString());
+                            preparedStatement.addBatch();
+                        }
+                        preparedStatement.executeBatch();
+                        return Unit.UNIT;
+                    }))).collect(toList());
+            Futures.sequence(futures).join();
+        });
     }
 }
