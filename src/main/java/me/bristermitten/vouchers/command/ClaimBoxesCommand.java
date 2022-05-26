@@ -4,6 +4,9 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import me.bristermitten.mittenlib.collections.Maps;
 import me.bristermitten.vouchers.data.claimbox.ClaimBoxManager;
+import me.bristermitten.vouchers.data.voucher.VoucherRegistry;
+import me.bristermitten.vouchers.data.voucher.type.VoucherType;
+import me.bristermitten.vouchers.data.voucher.type.VoucherTypeRegistry;
 import me.bristermitten.vouchers.lang.ClaimBoxesLangConfig;
 import me.bristermitten.vouchers.lang.ClaimBoxesLangService;
 import me.bristermitten.vouchers.menu.ClaimBoxAdminMenuFactory;
@@ -11,6 +14,7 @@ import me.bristermitten.vouchers.menu.ClaimBoxMenuFactory;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 
@@ -23,12 +27,17 @@ public class ClaimBoxesCommand extends BaseCommand {
     private final ClaimBoxesLangService langService;
     private final ClaimBoxAdminMenuFactory adminMenuFactory;
 
+    private final VoucherRegistry voucherRegistry;
+    private final VoucherTypeRegistry voucherTypeRegistry;
+
     @Inject
-    public ClaimBoxesCommand(ClaimBoxManager claimBoxManager, ClaimBoxMenuFactory menuFactory, ClaimBoxesLangService langService, ClaimBoxAdminMenuFactory adminMenuFactory) {
+    public ClaimBoxesCommand(ClaimBoxManager claimBoxManager, ClaimBoxMenuFactory menuFactory, ClaimBoxesLangService langService, ClaimBoxAdminMenuFactory adminMenuFactory, VoucherRegistry voucherRegistry, VoucherTypeRegistry voucherTypeRegistry) {
         this.claimBoxManager = claimBoxManager;
         this.menuFactory = menuFactory;
         this.langService = langService;
         this.adminMenuFactory = adminMenuFactory;
+        this.voucherRegistry = voucherRegistry;
+        this.voucherTypeRegistry = voucherTypeRegistry;
     }
 
     @Default
@@ -106,23 +115,26 @@ public class ClaimBoxesCommand extends BaseCommand {
                 });
     }
 
-//    @Subcommand("give")
-//    @CommandPermission("claimbox.give")
-//    @CommandCompletion("@offlinePlayers")
-//    public void give(CommandSender sender, OfflinePlayer target, String voucherId, @Optional @Nullable String arg) {
-//        if (Vouchers.getVoucher(voucherId) == null) {
-//            langService.send(sender, conf -> conf.errors().unknownVoucher(), Maps.of("{id}", voucherId));
-//            return;
-//        }
-//        claimBoxManager.getBox(target.getUniqueId())
-//                .thenCompose(box -> claimBoxManager.give(box, voucherId, arg))
-//                .thenAccept(box -> langService.send(sender, ClaimBoxesLangConfig::voucherGiven, Maps.of(PLAYER, target.getName(), "{id}", voucherId)))
-//                .exceptionally(e -> {
-//                    e.printStackTrace();
-//                    return null;
-//                });
-//
-//    }
+    @Subcommand("give")
+    @CommandPermission("claimbox.give")
+    @CommandCompletion("@offlinePlayers")
+    public void give(CommandSender sender, OfflinePlayer target, String voucherId, @Optional @Nullable String arg) {
+        java.util.Optional<VoucherType> typeOptional = voucherTypeRegistry.get(voucherId);
+        if (!typeOptional.isPresent()) {
+            langService.send(sender, conf -> conf.errors().unknownVoucher());
+            return;
+        }
+        VoucherType type = typeOptional.get();
+        voucherRegistry.createAndSave(type, arg)
+                .thenCompose(voucher -> claimBoxManager.getBox(target.getUniqueId())
+                        .thenCompose(box -> claimBoxManager.give(box, voucher))
+                        .thenAccept(box -> langService.send(sender, ClaimBoxesLangConfig::voucherGiven, Maps.of(PLAYER, target.getName(), "{id}", voucherId)))
+                        .exceptionally(e -> {
+                            e.printStackTrace();
+                            return null;
+                        }));
+
+    }
 //
 //    @Subcommand("giveall")
 //    @CommandPermission("claimbox.giveall")

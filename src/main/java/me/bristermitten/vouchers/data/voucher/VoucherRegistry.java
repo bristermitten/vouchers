@@ -36,6 +36,12 @@ public class VoucherRegistry extends CachingPersistence<UUID, Voucher> implement
         return voucher;
     }
 
+    public @NotNull CompletableFuture<Voucher> createAndSave(VoucherType type, @Nullable String data) {
+        Voucher voucher = create(type, data);
+        return save(voucher)
+                .thenApply(v -> voucher);
+    }
+
 
     public @NotNull CompletableFuture<Optional<Voucher>> getFromItem(@NotNull ItemStack item) {
         NBTItem nbtItem = new NBTItem(item);

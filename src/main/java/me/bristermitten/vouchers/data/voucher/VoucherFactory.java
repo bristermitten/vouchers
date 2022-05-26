@@ -4,6 +4,7 @@ import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.bristermitten.mittenlib.lang.format.MessageFormatter;
 import me.bristermitten.mittenlib.lang.format.hook.SimpleFormattingHook;
 import me.bristermitten.vouchers.data.voucher.type.VoucherType;
+import me.bristermitten.vouchers.util.Formatting;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -56,11 +57,11 @@ public class VoucherFactory {
             return item;
         }
         if (name != null) {
-            itemMeta.setDisplayName(withValuePlaceholder.preFormat(name, player));
+            itemMeta.setDisplayName(Formatting.legacyFullyFormat(messageFormatter, name, player));
         }
         if (lore != null) {
             itemMeta.setLore(lore.stream()
-                    .map(s -> withValuePlaceholder.preFormat(s, player))
+                    .map(s -> Formatting.legacyFullyFormat(withValuePlaceholder, s, player))
                     .collect(Collectors.toList()));
         }
         item.setItemMeta(itemMeta);

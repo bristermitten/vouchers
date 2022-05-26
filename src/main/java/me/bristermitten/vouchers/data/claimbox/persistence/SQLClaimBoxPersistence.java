@@ -41,7 +41,7 @@ public class SQLClaimBoxPersistence implements ClaimBoxPersistence {
     @Override
     @NotNull
     public CompletableFuture<Unit> init() {
-        return database.execute("create table if not exists " + tableName() + "\n" + "(\n" + "    owner VARCHAR(36),\n" + "    voucher_id VARCHAR(36) REFERENCES " + tnf.getTableName("Vouchers") + "(id) \n" + ")\n");
+        return database.execute("create table if not exists " + tableName() + "\n" + "(\n" + "    owner VARCHAR(36),\n" + "    voucher_id VARCHAR(100) REFERENCES " + tnf.getTableName("Vouchers") + "(id) \n" + ")\n");
     }
 
     @Override
@@ -82,7 +82,7 @@ public class SQLClaimBoxPersistence implements ClaimBoxPersistence {
     public CompletableFuture<Unit> addOne(@NotNull UUID id, Voucher voucherId) {
         return database.execute("INSERT INTO " + tableName() + " (owner, voucher_id) values (?, ?)", preparedStatement -> {
             preparedStatement.setString(1, id.toString());
-            preparedStatement.setString(2, voucherId.toString());
+            preparedStatement.setString(2, voucherId.getId().toString());
         });
     }
 
