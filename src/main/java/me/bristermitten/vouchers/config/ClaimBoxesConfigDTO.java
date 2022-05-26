@@ -17,7 +17,7 @@ public class ClaimBoxesConfigDTO {
     int updateInterval = 10;
 
     @Config
-    static class StorageConfigDTO {
+    public static class StorageConfigDTO {
         StorageType type;
         @Nullable DatabaseConfigDTO database;
 
