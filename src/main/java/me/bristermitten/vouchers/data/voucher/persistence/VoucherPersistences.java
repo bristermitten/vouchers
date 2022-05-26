@@ -14,11 +14,13 @@ import java.util.concurrent.CompletableFuture;
 
 public class VoucherPersistences implements VoucherPersistence {
     private final SQLVoucherPersistence sqlVoucherPersistence;
+    private final JSONVoucherPersistence jsonVoucherPersistence;
     private final Provider<ClaimBoxesConfig> configProvider;
 
     @Inject
-    public VoucherPersistences(SQLVoucherPersistence sqlVoucherPersistence, Provider<ClaimBoxesConfig> configProvider) {
+    public VoucherPersistences(SQLVoucherPersistence sqlVoucherPersistence, JSONVoucherPersistence jsonVoucherPersistence, Provider<ClaimBoxesConfig> configProvider) {
         this.sqlVoucherPersistence = sqlVoucherPersistence;
+        this.jsonVoucherPersistence = jsonVoucherPersistence;
         this.configProvider = configProvider;
     }
 
@@ -26,7 +28,8 @@ public class VoucherPersistences implements VoucherPersistence {
         switch (configProvider.get().storage().type()) {
             case SQL:
                 return sqlVoucherPersistence;
-
+            case JSON:
+                return jsonVoucherPersistence;
             default:
                 throw new IllegalStateException("Unknown storage type: " + configProvider.get().storage().type());
         }

@@ -2,9 +2,13 @@ package me.bristermitten.vouchers.database;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.google.inject.TypeLiteral;
+import com.google.inject.multibindings.Multibinder;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import me.bristermitten.mittenlib.files.json.ExtraTypeAdapter;
 import me.bristermitten.vouchers.config.ClaimBoxesConfig;
+import me.bristermitten.vouchers.data.voucher.persistence.VoucherTypeTypeAdapter;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Provider;
@@ -15,6 +19,8 @@ public class DatabaseModule extends AbstractModule {
         bind(Database.class).to(SQLDatabase.class);
         bind(HikariConfig.class).toProvider(HikariConfigurationProvider.class);
         bind(JDBCURLFactory.class).to(MySQLJDBCURLFactory.class);
+        Multibinder.newSetBinder(binder(), new TypeLiteral<ExtraTypeAdapter<?>>() {
+        }).addBinding().to(VoucherTypeTypeAdapter.class);
     }
 
     @Provides

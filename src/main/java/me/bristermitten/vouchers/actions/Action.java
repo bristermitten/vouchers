@@ -27,4 +27,10 @@ public class Action {
     public @Nullable String getData() {
         return data;
     }
+
+
+    public String serialize() {
+        return String.format("[%s] %s", type.getTag(), data)
+                .trim();
+    }
 }

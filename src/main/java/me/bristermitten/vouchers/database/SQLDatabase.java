@@ -27,7 +27,7 @@ public class SQLDatabase implements Database {
             try (final Connection connection = hikariDataSource.getConnection()) {
                 return body.apply(connection);
             } catch (Throwable e) {
-                throw new RuntimeSQLException(e);
+                throw new RuntimePersistException(e);
             }
         });
     }
@@ -37,7 +37,7 @@ public class SQLDatabase implements Database {
             try (final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 return block.apply(preparedStatement);
             } catch (SQLException e) {
-                throw new RuntimeSQLException(e);
+                throw new RuntimePersistException(e);
             }
         });
     }
@@ -86,7 +86,7 @@ public class SQLDatabase implements Database {
                 });
             } catch (SQLException e) {
                 connection.rollback();
-                throw new RuntimeSQLException(e);
+                throw new RuntimePersistException(e);
             } finally {
                 connection.setAutoCommit(true);
                 trans.close();
@@ -113,7 +113,7 @@ public class SQLDatabase implements Database {
                                 Objects.requireNonNull(connection, "Transaction closed");
                                 return body.apply(connection);
                             } catch (Throwable e) {
-                                throw new RuntimeSQLException(e);
+                                throw new RuntimePersistException(e);
                             }
                         }
                     }
@@ -125,7 +125,7 @@ public class SQLDatabase implements Database {
                 try {
                     connection.close();
                 } catch (SQLException e) {
-                    throw new RuntimeSQLException(e);
+                    throw new RuntimePersistException(e);
                 }
                 connection = null;
             }

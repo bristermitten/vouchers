@@ -1,6 +1,6 @@
 package me.bristermitten.vouchers.util;
 
-import me.bristermitten.vouchers.database.RuntimeSQLException;
+import me.bristermitten.vouchers.database.RuntimePersistException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,7 +24,7 @@ public class ResultSetUtil {
                 try {
                     return resultSet.next();
                 } catch (SQLException e) {
-                    throw new RuntimeSQLException(e);
+                    throw new RuntimePersistException(e);
                 }
             }
 
@@ -35,7 +35,7 @@ public class ResultSetUtil {
                         throw new NoSuchElementException();
                     }
                 } catch (SQLException e) {
-                    throw new RuntimeSQLException(e);
+                    throw new RuntimePersistException(e);
                 }
                 return resultSet;
             }

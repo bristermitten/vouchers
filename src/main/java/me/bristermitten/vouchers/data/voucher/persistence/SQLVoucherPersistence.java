@@ -4,7 +4,7 @@ import me.bristermitten.mittenlib.util.Unit;
 import me.bristermitten.vouchers.data.voucher.Voucher;
 import me.bristermitten.vouchers.data.voucher.type.VoucherTypeRegistry;
 import me.bristermitten.vouchers.database.Database;
-import me.bristermitten.vouchers.database.RuntimeSQLException;
+import me.bristermitten.vouchers.database.RuntimePersistException;
 import me.bristermitten.vouchers.persist.TableNameFactory;
 import me.bristermitten.vouchers.util.CollectionUtil;
 import org.jetbrains.annotations.NotNull;
@@ -62,7 +62,7 @@ public class SQLVoucherPersistence implements VoucherPersistence {
                 );
             }
         } catch (SQLException e) {
-            throw new RuntimeSQLException(e);
+            throw new RuntimePersistException(e);
         }
         return list;
     }

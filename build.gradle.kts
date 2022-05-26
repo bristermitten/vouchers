@@ -56,7 +56,7 @@ dependencies {
 
 //    compileOnly("net.luckperms:api:5.4")
 
-    val mittenLibVersion = "1.0.11-SNAPSHOT"
+    val mittenLibVersion = "1.0.12-SNAPSHOT"
     shade("me.bristermitten:mittenlib-core:$mittenLibVersion")
     shade("me.bristermitten:mittenlib-minimessage:$mittenLibVersion")
     shade("me.bristermitten:mittenlib-papi:$mittenLibVersion")
