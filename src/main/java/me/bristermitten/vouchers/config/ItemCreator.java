@@ -27,8 +27,10 @@ public class ItemCreator {
     }
 
     public ItemStack toItem(MessageFormatter formatter, ItemConfig config, @Nullable OfflinePlayer player) {
-        final ItemStack itemStack = new ItemStack(config.type(), 1, config.data());
-        itemStack.setDurability(config.data());
+        final ItemStack itemStack = config.type().parseItem();
+        if (itemStack == null) {
+            throw new IllegalArgumentException("Invalid item type: " + config.type());
+        }
         final ItemMeta meta = itemStack.getItemMeta();
         if (meta != null) {
             String name = config.name();
@@ -41,15 +43,17 @@ public class ItemCreator {
                         .map(s -> Formatting.legacyFullyFormat(formatter, s, player))
                         .collect(Collectors.toList()));
             }
-            itemStack.setItemMeta(meta);
-
         }
         if (meta instanceof SkullMeta) {
             String playerName = Optional
                     .ofNullable(config.player())
                     .orElseGet(() -> Optional.ofNullable(player).map(OfflinePlayer::getName).orElse(null));
+            if (playerName != null) {
+                playerName = formatter.preFormat(playerName, player);
+            }
             ((SkullMeta) meta).setOwner(playerName);
         }
+        itemStack.setItemMeta(meta);
         return itemStack;
     }
 

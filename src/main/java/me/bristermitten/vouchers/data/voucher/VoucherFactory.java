@@ -47,6 +47,12 @@ public class VoucherFactory {
         MessageFormatter withValuePlaceholder = data == null ? messageFormatter : messageFormatter.withExtraHooks(
                 new SimpleFormattingHook((s, p) -> s.replace(Voucher.DATA_PLACEHOLDER, data))
         );
+        if (player != null) {
+            withValuePlaceholder = withValuePlaceholder.withExtraHooks(
+                    new SimpleFormattingHook((s, p) -> s.replace(Voucher.PLAYER_PLACEHOLDER, player.getName()))
+            );
+
+        }
         ItemStack item = itemCreator.toItem(withValuePlaceholder, descriptor, player);
 
         NBTItem nbtItem = new NBTItem(item);

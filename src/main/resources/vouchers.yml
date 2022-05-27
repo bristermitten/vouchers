@@ -1,12 +1,14 @@
+# Voucher type config
 voucher-types:
   money:
     default-value: 100 # Value to use if not specified
     item:
-      type: 'PAPER'
+      type: PLAYER_HEAD
       name: '&6&lMoney Voucher'
       lore:
         - '&7Click to redeem'
         - '&6${value}'
+      player: '{player}' # Set the type to PLAYER_HEAD, and it will use this skin. Use {player} to use the player who received the voucher
     actions:
       - '[OP_COMMAND] eco give {player} {value}'
       - '[BROADCAST] <green>{player} has redeemed a voucher for <gold>${value}</gold>!'

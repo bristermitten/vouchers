@@ -3,6 +3,7 @@ package me.bristermitten.vouchers.data.voucher;
 import me.bristermitten.vouchers.actions.Action;
 import me.bristermitten.vouchers.data.voucher.type.VoucherType;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -10,6 +11,7 @@ import java.util.UUID;
 public class Voucher {
     public static final String NBT_KEY = "MittenVoucher:Voucher";
     public static final String DATA_PLACEHOLDER = "{value}";
+    public static final String PLAYER_PLACEHOLDER = "{player}";
     private final UUID id;
     private final @Nullable String data;
     private final VoucherType type;
@@ -43,7 +45,7 @@ public class Voucher {
         return used;
     }
 
-    public void use(Player user) {
+    public void use(@NotNull Player user) {
         if (used) {
             throw new IllegalStateException("Voucher has already been used!");
         }
@@ -52,6 +54,7 @@ public class Voucher {
             String actionData = action.getData();
             if (actionData != null && this.data != null) {
                 actionData = actionData.replace(Voucher.DATA_PLACEHOLDER, this.data);
+                actionData = actionData.replace(PLAYER_PLACEHOLDER, user.getName());
             }
             action.run(user, actionData);
         }
