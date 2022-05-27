@@ -96,7 +96,8 @@ tasks {
             "co.aikar.commands",
             "net.kyori",
             "de.tr7zw.changeme.nbtapi",
-            "me.bristermitten.mittenlib"
+            "me.bristermitten.mittenlib",
+            "com.cryptomorin.xseries",
         ).forEach {
             relocate(it, "me.bristermitten.vouchers.$it")
         }
