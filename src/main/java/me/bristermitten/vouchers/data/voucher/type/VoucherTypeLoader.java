@@ -2,8 +2,7 @@ package me.bristermitten.vouchers.data.voucher.type;
 
 import me.bristermitten.vouchers.actions.Action;
 import me.bristermitten.vouchers.actions.ActionParser;
-import me.bristermitten.vouchers.data.voucher.ItemDescriptor;
-import me.bristermitten.vouchers.data.voucher.VoucherConfig;
+import me.bristermitten.vouchers.config.VoucherConfig;
 
 import javax.inject.Inject;
 import java.util.Collection;
@@ -51,16 +50,9 @@ public class VoucherTypeLoader {
             );
         } else {
             return new NormalVoucherType(
-                    id, actions, defaultData, loadItemDescriptor(fromConfig.item())
+                    id, actions, defaultData, fromConfig.item()
             );
         }
     }
 
-    private ItemDescriptor loadItemDescriptor(VoucherConfig.VoucherType.ItemConfig item) {
-        return new ItemDescriptor(
-                item.type(),
-                item.name(),
-                item.lore()
-        );
-    }
 }

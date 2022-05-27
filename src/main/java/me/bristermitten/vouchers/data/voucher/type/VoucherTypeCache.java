@@ -1,6 +1,6 @@
 package me.bristermitten.vouchers.data.voucher.type;
 
-import me.bristermitten.vouchers.data.voucher.VoucherConfig;
+import me.bristermitten.vouchers.config.VoucherConfig;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;

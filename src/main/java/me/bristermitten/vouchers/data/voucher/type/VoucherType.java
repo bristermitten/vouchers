@@ -1,7 +1,7 @@
 package me.bristermitten.vouchers.data.voucher.type;
 
 import me.bristermitten.vouchers.actions.Action;
-import me.bristermitten.vouchers.data.voucher.ItemDescriptor;
+import me.bristermitten.vouchers.config.ItemConfig;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -16,16 +16,16 @@ public abstract class VoucherType {
     /**
      * Descriptor for the voucher item. If null, then the voucher is a voucher code only
      */
-    private final @Nullable ItemDescriptor itemDescriptor;
+    private final @Nullable ItemConfig itemDescriptor;
 
-    protected VoucherType(String id, Collection<Action> actions, @Nullable String defaultData, @Nullable ItemDescriptor itemDescriptor) {
+    protected VoucherType(String id, Collection<Action> actions, @Nullable String defaultData, @Nullable ItemConfig itemDescriptor) {
         this.id = id;
         this.actions = actions;
         this.defaultData = defaultData;
         this.itemDescriptor = itemDescriptor;
     }
 
-    public @Nullable ItemDescriptor getItemDescriptor() {
+    public @Nullable ItemConfig getItemDescriptor() {
         return itemDescriptor;
     }
 

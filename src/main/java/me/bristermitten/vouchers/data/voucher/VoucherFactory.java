@@ -3,26 +3,26 @@ package me.bristermitten.vouchers.data.voucher;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.bristermitten.mittenlib.lang.format.MessageFormatter;
 import me.bristermitten.mittenlib.lang.format.hook.SimpleFormattingHook;
+import me.bristermitten.vouchers.config.ItemConfig;
+import me.bristermitten.vouchers.config.ItemCreator;
 import me.bristermitten.vouchers.data.voucher.type.VoucherType;
-import me.bristermitten.vouchers.util.Formatting;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class VoucherFactory {
 
     private final MessageFormatter messageFormatter;
 
+    private final ItemCreator itemCreator;
+
     @Inject
-    public VoucherFactory(MessageFormatter messageFormatter) {
+    public VoucherFactory(MessageFormatter messageFormatter, ItemCreator itemCreator) {
         this.messageFormatter = messageFormatter;
+        this.itemCreator = itemCreator;
     }
 
     /**
@@ -40,31 +40,14 @@ public class VoucherFactory {
     }
 
     public ItemStack createVoucherItem(Voucher voucher, @Nullable final String data, @Nullable Player player) {
-        ItemDescriptor descriptor = voucher.getType().getItemDescriptor();
+        ItemConfig descriptor = voucher.getType().getItemDescriptor();
         if (descriptor == null) {
             throw new IllegalArgumentException("Voucher type " + voucher.getType().getId() + " can't create items");
         }
-        final Material type = descriptor.getType();
-        final String name = descriptor.getName();
-        final List<String> lore = descriptor.getLore();
-
         MessageFormatter withValuePlaceholder = data == null ? messageFormatter : messageFormatter.withExtraHooks(
                 new SimpleFormattingHook((s, p) -> s.replace(Voucher.DATA_PLACEHOLDER, data))
         );
-        final ItemStack item = new ItemStack(type);
-        ItemMeta itemMeta = item.getItemMeta();
-        if (itemMeta == null) {
-            return item;
-        }
-        if (name != null) {
-            itemMeta.setDisplayName(Formatting.legacyFullyFormat(messageFormatter, name, player));
-        }
-        if (lore != null) {
-            itemMeta.setLore(lore.stream()
-                    .map(s -> Formatting.legacyFullyFormat(withValuePlaceholder, s, player))
-                    .collect(Collectors.toList()));
-        }
-        item.setItemMeta(itemMeta);
+        ItemStack item = itemCreator.toItem(withValuePlaceholder, descriptor, player);
 
         NBTItem nbtItem = new NBTItem(item);
         nbtItem.setString(Voucher.NBT_KEY, voucher.getId().toString());

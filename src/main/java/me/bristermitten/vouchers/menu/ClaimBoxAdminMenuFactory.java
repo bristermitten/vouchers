@@ -5,6 +5,7 @@ import dev.triumphteam.gui.guis.GuiItem;
 import dev.triumphteam.gui.guis.PaginatedGui;
 import me.bristermitten.mittenlib.lang.format.MessageFormatter;
 import me.bristermitten.vouchers.config.ClaimBoxesConfig;
+import me.bristermitten.vouchers.config.ItemCreator;
 import me.bristermitten.vouchers.data.claimbox.ClaimBox;
 import me.bristermitten.vouchers.data.claimbox.ClaimBoxManager;
 import me.bristermitten.vouchers.data.voucher.Voucher;
@@ -20,16 +21,16 @@ import java.util.Optional;
 public class ClaimBoxAdminMenuFactory {
     private final Provider<ClaimBoxesConfig> configProvider;
     private final MessageFormatter messageFormatter;
-    private final MenuItems menuItems;
+    private final ItemCreator creator;
     private final ClaimBoxManager claimBoxManager;
 
     private final VoucherRegistry voucherRegistry;
 
     @Inject
-    public ClaimBoxAdminMenuFactory(Provider<ClaimBoxesConfig> configProvider, MessageFormatter messageFormatter, MenuItems menuItems, ClaimBoxManager claimBoxManager, VoucherRegistry voucherRegistry) {
+    public ClaimBoxAdminMenuFactory(Provider<ClaimBoxesConfig> configProvider, MessageFormatter messageFormatter, ItemCreator creator, ClaimBoxManager claimBoxManager, VoucherRegistry voucherRegistry) {
         this.configProvider = configProvider;
         this.messageFormatter = messageFormatter;
-        this.menuItems = menuItems;
+        this.creator = creator;
         this.claimBoxManager = claimBoxManager;
         this.voucherRegistry = voucherRegistry;
     }
@@ -42,19 +43,10 @@ public class ClaimBoxAdminMenuFactory {
 
     public PaginatedGui create(ClaimBox claimBox, OfflinePlayer owner) {
         final ClaimBoxesConfig config = configProvider.get();
-        final PaginatedGui gui = Gui.paginated()
-                .rows(6)
-                .disableAllInteractions()
-                .title(messageFormatter.format(
-                        config.gui().title(),
-                        owner
-                ))
-                .enableItemTake()
-                .enableItemPlace()
-                .create();
+        final PaginatedGui gui = Gui.paginated().rows(6).disableAllInteractions().title(messageFormatter.format(config.gui().title(), owner)).enableItemTake().enableItemPlace().create();
 
-        gui.setItem(6, 3, new GuiItem(menuItems.toItem(config.gui().prevPage(), owner), e -> gui.previous()));
-        gui.setItem(6, 7, new GuiItem(menuItems.toItem(config.gui().nextPage(), owner), e -> gui.next()));
+        gui.setItem(6, 3, new GuiItem(creator.toItem(config.gui().prevPage(), owner), e -> gui.previous()));
+        gui.setItem(6, 7, new GuiItem(creator.toItem(config.gui().nextPage(), owner), e -> gui.next()));
 
         gui.setDefaultClickAction(event -> {
             if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {

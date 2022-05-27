@@ -4,7 +4,6 @@ import me.bristermitten.mittenlib.config.Config;
 import me.bristermitten.mittenlib.config.Source;
 import me.bristermitten.mittenlib.config.names.NamingPattern;
 import me.bristermitten.mittenlib.config.names.NamingPatterns;
-import org.bukkit.Material;
 import org.jetbrains.annotations.Nullable;
 
 @Config
@@ -42,13 +41,6 @@ public class ClaimBoxesConfigDTO {
         String title;
         ItemConfigDTO prevPage;
         ItemConfigDTO nextPage;
-    }
-
-    @Config
-    static class ItemConfigDTO {
-        Material type;
-        String name;
-        short data = 0;
     }
 
     @Config
