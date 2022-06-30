@@ -1,8 +1,8 @@
 package me.bristermitten.vouchers.command;
 
-import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import me.bristermitten.mittenlib.collections.Maps;
+import me.bristermitten.mittenlib.commands.Command;
 import me.bristermitten.vouchers.data.claimbox.ClaimBoxManager;
 import me.bristermitten.vouchers.data.voucher.VoucherRegistry;
 import me.bristermitten.vouchers.data.voucher.type.VoucherType;
@@ -20,7 +20,7 @@ import javax.inject.Inject;
 
 
 @CommandAlias("claimbox|cb|cr")
-public class ClaimBoxesCommand extends BaseCommand {
+public class ClaimBoxesCommand extends Command {
     public static final String PLAYER = "{player}";
     private final ClaimBoxManager claimBoxManager;
     private final ClaimBoxMenuFactory menuFactory;
@@ -135,18 +135,4 @@ public class ClaimBoxesCommand extends BaseCommand {
                         }));
 
     }
-//
-//    @Subcommand("giveall")
-//    @CommandPermission("claimbox.giveall")
-//    public void giveAll(CommandSender sender, String targetGroup, boolean online, String voucherId, @Optional @Nullable String arg) {
-//        claimBoxManager.giveAll(targetGroup, online, voucherId, arg)
-//                .thenAccept(box ->
-//                        langService.send(sender, ClaimBoxesLangConfig::voucherGivenAll,
-//                                Maps.of("{group}", targetGroup, "{id}", voucherId)))
-//                .exceptionally(e -> {
-//                    e.printStackTrace();
-//                    return null;
-//                });
-//    } TODO figure out what to do with these
-
 }

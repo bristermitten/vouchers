@@ -1,10 +1,11 @@
 package me.bristermitten.vouchers.command;
 
-import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
+import me.bristermitten.mittenlib.commands.Command;
 import me.bristermitten.vouchers.data.voucher.Voucher;
 import me.bristermitten.vouchers.data.voucher.VoucherRegistry;
 import me.bristermitten.vouchers.data.voucher.type.VoucherTypeRegistry;
@@ -16,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.inject.Inject;
 
 @CommandAlias("vouchers|voucher")
-public class VouchersCommand extends BaseCommand {
+public class VouchersCommand extends Command {
 
     private final VoucherRegistry voucherRegistry;
     private final VoucherTypeRegistry voucherTypeRegistry;
@@ -28,6 +29,7 @@ public class VouchersCommand extends BaseCommand {
     }
 
     @Subcommand("give")
+    @CommandCompletion("@players @voucherIds")
     public void give(CommandSender sender, OnlinePlayer target, String voucherId, @Optional @Nullable String data) {
         Player targetPlayer = target.getPlayer();
         voucherTypeRegistry.get(voucherId).ifPresent(voucherType -> {

@@ -2,13 +2,12 @@ package me.bristermitten.vouchers.data.voucher.type;
 
 import me.bristermitten.vouchers.config.VoucherConfig;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -16,7 +15,7 @@ import java.util.logging.Logger;
  * To allow live reloading, voucher types from the config are not stored in the main cache.
  * Instead, we rely on MittenLib's config caching mechanisms to store them, turning into a VoucherType when
  * needed.
- *
+ * <p>
  * Manually registered types with {@link #register(VoucherType)} <i>are</i> cached,
  * and won't be reloaded automatically
  */
@@ -50,5 +49,12 @@ public class VoucherTypeCache implements VoucherTypeRegistry {
         }
         return Optional.ofNullable(configProvider.get().voucherTypes().get(id))
                 .map(config -> loader.load(id, config));
+    }
+
+    @Override
+    public @Unmodifiable Collection<VoucherType> getAll() {
+        HashSet<VoucherType> types = new HashSet<>(voucherTypes.values());
+        types.addAll(loader.load(configProvider.get()));
+        return Collections.unmodifiableCollection(types);
     }
 }

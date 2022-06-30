@@ -8,7 +8,7 @@ import me.bristermitten.mittenlib.papi.PAPIModule;
 import me.bristermitten.mittenlib.util.Futures;
 import me.bristermitten.mittenlib.watcher.FileWatcherModule;
 import me.bristermitten.vouchers.actions.ActionModule;
-import me.bristermitten.vouchers.command.CommandsModule;
+import me.bristermitten.vouchers.command.VouchersCommandsModule;
 import me.bristermitten.vouchers.config.ClaimBoxesConfig;
 import me.bristermitten.vouchers.config.VoucherConfig;
 import me.bristermitten.vouchers.data.claimbox.ClaimBoxDataModule;
@@ -49,7 +49,7 @@ public class MittenVouchers extends JavaPlugin {
                         new MiniMessageModule(),
                         new PAPIModule(),
                         new FileWatcherModule(),
-                        new CommandsModule())
+                        new VouchersCommandsModule())
                 .build();
 
         injector.injectMembers(this);

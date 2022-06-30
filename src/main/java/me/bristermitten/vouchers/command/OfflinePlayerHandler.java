@@ -2,13 +2,14 @@ package me.bristermitten.vouchers.command;
 
 import co.aikar.commands.BukkitCommandCompletionContext;
 import co.aikar.commands.BukkitCommandExecutionContext;
-import co.aikar.commands.CommandCompletions;
 import co.aikar.commands.InvalidCommandArgument;
-import co.aikar.commands.contexts.ContextResolver;
-import me.bristermitten.vouchers.lang.ClaimBoxesLangService;
 import me.bristermitten.mittenlib.collections.Maps;
+import me.bristermitten.mittenlib.commands.handlers.ArgumentContext;
+import me.bristermitten.mittenlib.commands.handlers.TabCompleter;
+import me.bristermitten.vouchers.lang.ClaimBoxesLangService;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -16,13 +17,23 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class OfflinePlayerHandler implements CommandCompletions.AsyncCommandCompletionHandler<BukkitCommandCompletionContext>,
-        ContextResolver<OfflinePlayer, BukkitCommandExecutionContext> {
+public class OfflinePlayerHandler implements TabCompleter, ArgumentContext<OfflinePlayer> {
+
     private final ClaimBoxesLangService langService;
 
     @Inject
     public OfflinePlayerHandler(ClaimBoxesLangService langService) {
         this.langService = langService;
+    }
+
+    @Override
+    public @NotNull Class<OfflinePlayer> type() {
+        return OfflinePlayer.class;
+    }
+
+    @Override
+    public @NotNull String id() {
+        return "offlinePlayers";
     }
 
     @Override
@@ -51,4 +62,6 @@ public class OfflinePlayerHandler implements CommandCompletions.AsyncCommandComp
         }
         return offlinePlayer;
     }
+
+
 }
