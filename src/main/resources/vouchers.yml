@@ -1,7 +1,8 @@
 # Voucher type config
 voucher-types:
   money:
-    default-value: 100 # Value to use if not specified
+    default-value: '100' # Value to use if not specified
+    permission: mittenvouchers.money # Players must have this permission to use this voucher type
     item:
       type: PLAYER_HEAD
       name: '&6&lMoney Voucher'
@@ -10,6 +11,23 @@ voucher-types:
         - '&6${value}'
       player: '{player}' # Set the type to PLAYER_HEAD, and it will use this skin. Use {player} to use the player who received the voucher
       glow: false # Set to true to make the item glow
+      unbreakable: true
+      flags:
+        - HIDE_UNBREAKABLE
     actions:
       - '[OP_COMMAND] eco give {player} {value}'
       - '[BROADCAST] <green>{player} has redeemed a voucher for <gold>${value}</gold>!'
+  money2:
+    item:
+      type: LEATHER_CHESTPLATE
+      name: '<red>Money Chestplate'
+      lore:
+        - 'Why is it a chestplate?'
+        - 'Because it is money!'
+        - '<red>{value}</red>'
+      dye-color: '#b28dff' # Leather armor dye color
+      enchantments:
+        - type: DAMAGE_ALL
+          level: 3
+    actions:
+      - '[OP_COMMAND] eco give {player} {value}'

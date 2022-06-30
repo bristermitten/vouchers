@@ -8,7 +8,7 @@ import me.bristermitten.vouchers.data.voucher.VoucherRegistry;
 import me.bristermitten.vouchers.data.voucher.type.VoucherType;
 import me.bristermitten.vouchers.data.voucher.type.VoucherTypeRegistry;
 import me.bristermitten.vouchers.lang.ClaimBoxesLangConfig;
-import me.bristermitten.vouchers.lang.ClaimBoxesLangService;
+import me.bristermitten.vouchers.lang.VouchersLangService;
 import me.bristermitten.vouchers.menu.ClaimBoxAdminMenuFactory;
 import me.bristermitten.vouchers.menu.ClaimBoxMenuFactory;
 import org.bukkit.OfflinePlayer;
@@ -24,14 +24,14 @@ public class ClaimBoxesCommand extends Command {
     public static final String PLAYER = "{player}";
     private final ClaimBoxManager claimBoxManager;
     private final ClaimBoxMenuFactory menuFactory;
-    private final ClaimBoxesLangService langService;
+    private final VouchersLangService langService;
     private final ClaimBoxAdminMenuFactory adminMenuFactory;
 
     private final VoucherRegistry voucherRegistry;
     private final VoucherTypeRegistry voucherTypeRegistry;
 
     @Inject
-    public ClaimBoxesCommand(ClaimBoxManager claimBoxManager, ClaimBoxMenuFactory menuFactory, ClaimBoxesLangService langService, ClaimBoxAdminMenuFactory adminMenuFactory, VoucherRegistry voucherRegistry, VoucherTypeRegistry voucherTypeRegistry) {
+    public ClaimBoxesCommand(ClaimBoxManager claimBoxManager, ClaimBoxMenuFactory menuFactory, VouchersLangService langService, ClaimBoxAdminMenuFactory adminMenuFactory, VoucherRegistry voucherRegistry, VoucherTypeRegistry voucherTypeRegistry) {
         this.claimBoxManager = claimBoxManager;
         this.menuFactory = menuFactory;
         this.langService = langService;

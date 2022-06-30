@@ -56,7 +56,7 @@ dependencies {
 
 //    compileOnly("net.luckperms:api:5.4")
 
-    val mittenLibVersion = "1.0.24-SNAPSHOT"
+    val mittenLibVersion = "1.0.25-SNAPSHOT"
     shade("me.bristermitten:mittenlib-core:$mittenLibVersion")
     shade("me.bristermitten:mittenlib-commands:$mittenLibVersion")
     shade("me.bristermitten:mittenlib-minimessage:$mittenLibVersion")
@@ -69,7 +69,7 @@ dependencies {
 
     shade("co.aikar:acf-paper:0.5.0-SNAPSHOT")
     shade("de.tr7zw:item-nbt-api:2.9.2")
-    shade("com.github.cryptomorin:XSeries:8.7.1")
+    shade("com.github.cryptomorin:XSeries:8.8.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testImplementation("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
@@ -108,7 +108,7 @@ tasks {
 }
 
 tasks.register<Copy>("copyJarToServerPlugins") {
-    from(tasks.getByPath("proguardJar"))
+    from(tasks.getByPath("shadowJar"))
     into(layout.projectDirectory.dir("server/plugins"))
 }
 

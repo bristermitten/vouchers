@@ -10,7 +10,7 @@ import me.bristermitten.vouchers.data.claimbox.ClaimBox;
 import me.bristermitten.vouchers.data.claimbox.ClaimBoxManager;
 import me.bristermitten.vouchers.data.voucher.Voucher;
 import me.bristermitten.vouchers.data.voucher.VoucherRegistry;
-import me.bristermitten.vouchers.lang.ClaimBoxesLangService;
+import me.bristermitten.vouchers.lang.VouchersLangService;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -26,12 +26,12 @@ public class ClaimBoxMenuFactory {
     private final ConfirmVoucherUseMenuFactory confirmVoucherUseMenuFactory;
     private final ItemCreator itemCreator;
     private final ClaimBoxManager claimBoxManager;
-    private final ClaimBoxesLangService langService;
+    private final VouchersLangService langService;
 
     private final VoucherRegistry voucherRegistry;
 
     @Inject
-    public ClaimBoxMenuFactory(Provider<ClaimBoxesConfig> configProvider, MessageFormatter messageFormatter, ConfirmVoucherUseMenuFactory confirmVoucherUseMenuFactory, ItemCreator itemCreator, ClaimBoxManager claimBoxManager, ClaimBoxesLangService langService, VoucherRegistry voucherRegistry) {
+    public ClaimBoxMenuFactory(Provider<ClaimBoxesConfig> configProvider, MessageFormatter messageFormatter, ConfirmVoucherUseMenuFactory confirmVoucherUseMenuFactory, ItemCreator itemCreator, ClaimBoxManager claimBoxManager, VouchersLangService langService, VoucherRegistry voucherRegistry) {
         this.configProvider = configProvider;
         this.messageFormatter = messageFormatter;
         this.confirmVoucherUseMenuFactory = confirmVoucherUseMenuFactory;

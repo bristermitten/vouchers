@@ -39,7 +39,7 @@ class SQLClaimBoxPersistenceTest {
                 .createInjector(new ActionModule());
 
         Voucher voucher = injector.getInstance(VoucherRegistry.class)
-                .create(new VoucherCodeType("test", new ArrayList<>(), null),
+                .create(new VoucherCodeType("test", new ArrayList<>(), null, null),
                         null);
         final UUID uuid = UUID.fromString("876ce46d-dc56-4a17-9644-0be67fe7c7f6");
 

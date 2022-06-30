@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class Voucher {
@@ -45,9 +46,13 @@ public class Voucher {
         return used;
     }
 
-    public void use(@NotNull Player user) {
+    public void use(@NotNull Player user) throws VoucherUsageException {
         if (used) {
             throw new IllegalStateException("Voucher has already been used!");
+        }
+        Optional<String> permission = type.getPermission();
+        if (permission.isPresent() && !user.hasPermission(permission.get())) {
+            throw new VoucherUsageException.NoPermission(permission.get());
         }
         this.used = true;
         for (Action action : type.getActions()) {

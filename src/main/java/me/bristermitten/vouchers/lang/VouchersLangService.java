@@ -11,12 +11,12 @@ import javax.inject.Provider;
 import java.util.Map;
 import java.util.function.Function;
 
-public class ClaimBoxesLangService {
+public class VouchersLangService {
     private final LangService langService;
     private final Provider<ClaimBoxesLangConfig> configProvider;
 
     @Inject
-    public ClaimBoxesLangService(LangService langService, Provider<ClaimBoxesLangConfig> configProvider) {
+    public VouchersLangService(LangService langService, Provider<ClaimBoxesLangConfig> configProvider) {
         this.langService = langService;
         this.configProvider = configProvider;
     }

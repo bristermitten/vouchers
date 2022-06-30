@@ -6,7 +6,7 @@ import co.aikar.commands.InvalidCommandArgument;
 import me.bristermitten.mittenlib.collections.Maps;
 import me.bristermitten.mittenlib.commands.handlers.ArgumentContext;
 import me.bristermitten.mittenlib.commands.handlers.TabCompleter;
-import me.bristermitten.vouchers.lang.ClaimBoxesLangService;
+import me.bristermitten.vouchers.lang.VouchersLangService;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
@@ -19,10 +19,10 @@ import java.util.stream.Collectors;
 
 public class OfflinePlayerHandler implements TabCompleter, ArgumentContext<OfflinePlayer> {
 
-    private final ClaimBoxesLangService langService;
+    private final VouchersLangService langService;
 
     @Inject
-    public OfflinePlayerHandler(ClaimBoxesLangService langService) {
+    public OfflinePlayerHandler(VouchersLangService langService) {
         this.langService = langService;
     }
 

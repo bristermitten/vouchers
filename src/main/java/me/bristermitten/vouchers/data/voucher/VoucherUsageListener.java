@@ -15,11 +15,13 @@ import java.util.logging.Logger;
 public class VoucherUsageListener implements Listener {
     private final VoucherRegistry voucherRegistry;
     private final Logger logger;
+    private final VoucherUsageExceptionHandler exceptionHandler;
 
     @Inject
-    public VoucherUsageListener(VoucherRegistry voucherRegistry, Logger logger) {
+    public VoucherUsageListener(VoucherRegistry voucherRegistry, Logger logger, VoucherUsageExceptionHandler exceptionHandler) {
         this.voucherRegistry = voucherRegistry;
         this.logger = logger;
+        this.exceptionHandler = exceptionHandler;
     }
 
     @EventHandler
@@ -43,8 +45,14 @@ public class VoucherUsageListener implements Listener {
             event.setCancelled(true);
             return;
         }
-        voucher.use(event.getPlayer());
         event.setCancelled(true);
+        try {
+            voucher.use(event.getPlayer());
+        } catch (VoucherUsageException e) {
+            exceptionHandler.handle(event.getPlayer(), voucher, e);
+            return;
+        }
+
         event.getPlayer().getInventory().remove(item);
     }
 }

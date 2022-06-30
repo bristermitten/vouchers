@@ -18,11 +18,14 @@ public abstract class VoucherType {
      */
     private final @Nullable ItemConfig itemDescriptor;
 
-    protected VoucherType(String id, Collection<Action> actions, @Nullable String defaultData, @Nullable ItemConfig itemDescriptor) {
+    private final @Nullable String permission;
+
+    protected VoucherType(String id, Collection<Action> actions, @Nullable String defaultData, @Nullable ItemConfig itemDescriptor, @Nullable String permission) {
         this.id = id;
         this.actions = actions;
         this.defaultData = defaultData;
         this.itemDescriptor = itemDescriptor;
+        this.permission = permission;
     }
 
     public @Nullable ItemConfig getItemDescriptor() {
@@ -39,5 +42,9 @@ public abstract class VoucherType {
 
     public Optional<String> getDefaultData() {
         return Optional.ofNullable(defaultData);
+    }
+
+    public Optional<String> getPermission() {
+        return Optional.ofNullable(permission);
     }
 }

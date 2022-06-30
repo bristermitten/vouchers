@@ -18,6 +18,7 @@ public class VoucherConfigDTO {
     @Config
     static class VoucherTypeDTO {
         @Nullable String defaultValue;
+        @Nullable String permission;
         @Nullable ItemConfigDTO item;
         List<String> actions;
     }

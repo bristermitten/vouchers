@@ -39,15 +39,16 @@ public class VoucherTypeLoader {
                 .collect(Collectors.toList());
 
         String defaultData = fromConfig.defaultValue();
+        String permission = fromConfig.permission();
 
         if (fromConfig.item() == null) {
             return new VoucherCodeType(
-                    id, actions, defaultData
-            );
+                    id, actions, defaultData,
+                    permission);
         } else {
             return new NormalVoucherType(
-                    id, actions, defaultData, fromConfig.item()
-            );
+                    id, actions, defaultData, fromConfig.item(),
+                    permission);
         }
     }
 

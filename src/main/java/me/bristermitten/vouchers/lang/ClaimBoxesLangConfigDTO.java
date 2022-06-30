@@ -23,6 +23,7 @@ public class ClaimBoxesLangConfigDTO {
         LangMessage claimboxEmpty;
         LangMessage claimboxEmptyOther;
         LangMessage noPermission;
+        LangMessage voucherNoPermission;
         LangMessage unknownPlayer;
         LangMessage invalidBoolean;
         LangMessage unknownVoucher;

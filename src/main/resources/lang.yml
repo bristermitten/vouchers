@@ -8,6 +8,7 @@ errors:
   unknown-voucher: "&cUnknown voucher {id}. Note that voucher codes cannot be used"
   unknown-command: "&cUnknown Command, type /claimbox help for help"
   inventory-full: "&cYou don't have room in your inventory to claim this voucher!"
+  voucher-no-permission: "<red>You don''t have permission to use this voucher! Required: <yellow>{permission}</yellow>"
 
 claimbox-reset: "&aYour ClaimBox has been reset"
 claimbox-reset-other: "&a{player}'s ClaimBox has been reset"
