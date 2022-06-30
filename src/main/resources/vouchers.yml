@@ -9,6 +9,7 @@ voucher-types:
         - '&7Click to redeem'
         - '&6${value}'
       player: '{player}' # Set the type to PLAYER_HEAD, and it will use this skin. Use {player} to use the player who received the voucher
+      glow: false # Set to true to make the item glow
     actions:
       - '[OP_COMMAND] eco give {player} {value}'
       - '[BROADCAST] <green>{player} has redeemed a voucher for <gold>${value}</gold>!'

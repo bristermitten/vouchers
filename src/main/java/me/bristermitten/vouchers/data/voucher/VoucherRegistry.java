@@ -5,7 +5,7 @@ import me.bristermitten.vouchers.data.voucher.persistence.VoucherPersistence;
 import me.bristermitten.vouchers.data.voucher.persistence.VoucherPersistences;
 import me.bristermitten.vouchers.data.voucher.type.VoucherType;
 import me.bristermitten.vouchers.persist.CachingPersistence;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -60,7 +60,7 @@ public class VoucherRegistry extends CachingPersistence<UUID, Voucher> implement
         return Optional.empty();
     }
 
-    public ItemStack createVoucherItem(Voucher voucher, @Nullable Player receiver) {
+    public ItemStack createVoucherItem(Voucher voucher, @Nullable OfflinePlayer receiver) {
         return factory.createVoucherItem(voucher, voucher.getData(), receiver);
     }
 

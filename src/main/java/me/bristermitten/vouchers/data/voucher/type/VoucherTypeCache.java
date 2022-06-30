@@ -11,6 +11,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+/**
+ * Stores voucher types
+ * To allow live reloading, voucher types from the config are not stored in the main cache.
+ * Instead, we rely on MittenLib's config caching mechanisms to store them, turning into a VoucherType when
+ * needed.
+ *
+ * Manually registered types with {@link #register(VoucherType)} <i>are</i> cached,
+ * and won't be reloaded automatically
+ */
 @Singleton
 public class VoucherTypeCache implements VoucherTypeRegistry {
     private final Map<String, VoucherType> voucherTypes = new HashMap<>();
@@ -26,11 +35,6 @@ public class VoucherTypeCache implements VoucherTypeRegistry {
         this.loader = loader;
     }
 
-    private void loadFromConfig() {
-        this.voucherTypes.clear();
-        loader.load(configProvider.get())
-                .forEach(this::register);
-    }
 
     @Override
     public void register(@NotNull VoucherType voucherType) {
@@ -41,11 +45,11 @@ public class VoucherTypeCache implements VoucherTypeRegistry {
 
     @Override
     public Optional<VoucherType> get(String id) {
-        VoucherType value = voucherTypes.get(id);
-        if (value == null) {
-            loadFromConfig(); // Try and reload the config, in case it was changed
-            value = voucherTypes.get(id);
+        if (voucherTypes.containsKey(id)) {
+            return Optional.of(voucherTypes.get(id));
         }
-        return Optional.ofNullable(value);
+        return Optional.ofNullable(configProvider.get()
+                        .voucherTypes().get(id))
+                .map(config -> loader.load(id, config));
     }
 }

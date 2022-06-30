@@ -14,4 +14,6 @@ class ItemConfigDTO {
     @Nullable List<String> lore;
 
     @Nullable String player;
+
+    boolean glow = false;
 }

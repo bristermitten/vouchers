@@ -19,6 +19,7 @@ import me.bristermitten.vouchers.data.voucher.persistence.VoucherPersistence;
 import me.bristermitten.vouchers.database.DatabaseModule;
 import me.bristermitten.vouchers.lang.ClaimBoxesLangConfig;
 import me.bristermitten.vouchers.persist.Persistence;
+import me.bristermitten.vouchers.util.GlowEnchant;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -59,6 +60,11 @@ public class MittenVouchers extends JavaPlugin {
                 injector.getInstance(VoucherPersistence.class),
                 injector.getInstance(ClaimBoxPersistence.class)
         );
+        try {
+            GlowEnchant.registerGlow();
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        }
         Instant startTime = Instant.now();
         Futures.sequence(persistences.stream().map(Persistence::init).collect(Collectors.toList()))
                 .whenComplete((v, e) -> {

@@ -6,7 +6,7 @@ import me.bristermitten.mittenlib.lang.format.hook.SimpleFormattingHook;
 import me.bristermitten.vouchers.config.ItemConfig;
 import me.bristermitten.vouchers.config.ItemCreator;
 import me.bristermitten.vouchers.data.voucher.type.VoucherType;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,10 +36,11 @@ public class VoucherFactory {
      * @return the created voucher
      */
     public Voucher createVoucher(VoucherType type, @Nullable String data) {
+        data = data == null ? type.getDefaultData().orElse(null) : data;
         return new Voucher(UUID.randomUUID(), data, type);
     }
 
-    public ItemStack createVoucherItem(Voucher voucher, @Nullable final String data, @Nullable Player player) {
+    public ItemStack createVoucherItem(Voucher voucher, @Nullable final String data, @Nullable OfflinePlayer player) {
         ItemConfig descriptor = voucher.getType().getItemDescriptor();
         if (descriptor == null) {
             throw new IllegalArgumentException("Voucher type " + voucher.getType().getId() + " can't create items");

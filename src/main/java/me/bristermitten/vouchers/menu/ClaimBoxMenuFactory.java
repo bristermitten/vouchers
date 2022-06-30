@@ -11,6 +11,7 @@ import me.bristermitten.vouchers.data.claimbox.ClaimBoxManager;
 import me.bristermitten.vouchers.data.voucher.Voucher;
 import me.bristermitten.vouchers.data.voucher.VoucherRegistry;
 import me.bristermitten.vouchers.lang.ClaimBoxesLangService;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -41,7 +42,7 @@ public class ClaimBoxMenuFactory {
     }
 
     public GuiItem createItem(ClaimBox box, PaginatedGui gui, Voucher voucher) {
-        ItemStack item = voucherRegistry.createVoucherItem(voucher, null);
+        ItemStack item = voucherRegistry.createVoucherItem(voucher, Bukkit.getOfflinePlayer(box.getOwner()));
         return new GuiItem(item, event -> {
             final Player whoClicked = (Player) event.getWhoClicked();
             confirmVoucherUseMenuFactory.create(

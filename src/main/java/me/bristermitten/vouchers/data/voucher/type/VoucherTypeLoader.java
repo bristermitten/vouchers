@@ -29,7 +29,7 @@ public class VoucherTypeLoader {
                 .collect(Collectors.toList());
     }
 
-    private VoucherType load(String id, VoucherConfig.VoucherType fromConfig) {
+    public VoucherType load(String id, VoucherConfig.VoucherType fromConfig) {
         List<Action> actions = fromConfig.actions().stream()
                 .map(msg -> {
                     Optional<Action> opt = actionParser.parse(msg);
