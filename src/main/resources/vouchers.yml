@@ -14,6 +14,8 @@ voucher-types:
       unbreakable: true
       flags:
         - HIDE_UNBREAKABLE
+    receive-message: '&aYou have received a voucher for <gold>${value}</gold>!'
+    redeem-message: '&aYou have redeemed a voucher for <gold>${value}</gold>!'
     actions:
       - '[OP_COMMAND] eco give {player} {value}'
       - '[BROADCAST] <green>{player} has redeemed a voucher for <gold>${value}</gold>!'

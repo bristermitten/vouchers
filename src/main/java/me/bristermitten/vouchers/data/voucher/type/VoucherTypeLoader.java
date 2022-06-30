@@ -1,7 +1,9 @@
 package me.bristermitten.vouchers.data.voucher.type;
 
+import me.bristermitten.mittenlib.lang.LangMessage;
 import me.bristermitten.vouchers.actions.Action;
 import me.bristermitten.vouchers.actions.ActionParser;
+import me.bristermitten.vouchers.config.ItemConfig;
 import me.bristermitten.vouchers.config.VoucherConfig;
 
 import javax.inject.Inject;
@@ -40,15 +42,15 @@ public class VoucherTypeLoader {
 
         String defaultData = fromConfig.defaultValue();
         String permission = fromConfig.permission();
+        LangMessage receiveMessage = fromConfig.receiveMessage();
+        LangMessage redeemMessage = fromConfig.redeemMessage();
+        ItemConfig item = fromConfig.item();
+        VoucherTypeSettings settings = new VoucherTypeSettings(actions, defaultData, item, permission, receiveMessage, redeemMessage);
 
         if (fromConfig.item() == null) {
-            return new VoucherCodeType(
-                    id, actions, defaultData,
-                    permission);
+            return new VoucherCodeType(id, settings);
         } else {
-            return new NormalVoucherType(
-                    id, actions, defaultData, fromConfig.item(),
-                    permission);
+            return new NormalVoucherType(id, settings);
         }
     }
 

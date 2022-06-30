@@ -11,6 +11,7 @@ import me.bristermitten.vouchers.data.claimbox.persistence.SQLClaimBoxPersistenc
 import me.bristermitten.vouchers.data.voucher.Voucher;
 import me.bristermitten.vouchers.data.voucher.VoucherRegistry;
 import me.bristermitten.vouchers.data.voucher.type.VoucherCodeType;
+import me.bristermitten.vouchers.data.voucher.type.VoucherTypeSettings;
 import me.bristermitten.vouchers.database.Database;
 import me.bristermitten.vouchers.database.HikariConfigurationProvider;
 import me.bristermitten.vouchers.database.JDBCURLFactory;
@@ -38,9 +39,12 @@ class SQLClaimBoxPersistenceTest {
         final Injector injector = Guice
                 .createInjector(new ActionModule());
 
+        VoucherCodeType voucherCodeType = new VoucherCodeType("test",
+                new VoucherTypeSettings(new ArrayList<>(), null, null,
+                        null, null, null));
+
         Voucher voucher = injector.getInstance(VoucherRegistry.class)
-                .create(new VoucherCodeType("test", new ArrayList<>(), null, null),
-                        null);
+                .create(voucherCodeType, null);
         final UUID uuid = UUID.fromString("876ce46d-dc56-4a17-9644-0be67fe7c7f6");
 
         final ClaimBox box = new ClaimBox(uuid, Collections.singleton(voucher));

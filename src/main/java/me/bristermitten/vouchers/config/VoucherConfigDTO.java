@@ -4,6 +4,7 @@ import me.bristermitten.mittenlib.config.Config;
 import me.bristermitten.mittenlib.config.Source;
 import me.bristermitten.mittenlib.config.names.NamingPattern;
 import me.bristermitten.mittenlib.config.names.NamingPatterns;
+import me.bristermitten.mittenlib.lang.LangMessage;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -20,6 +21,9 @@ public class VoucherConfigDTO {
         @Nullable String defaultValue;
         @Nullable String permission;
         @Nullable ItemConfigDTO item;
+
+        @Nullable LangMessage receiveMessage;
+        @Nullable LangMessage redeemMessage;
         List<String> actions;
     }
 }

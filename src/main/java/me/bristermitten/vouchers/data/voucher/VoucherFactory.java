@@ -36,21 +36,21 @@ public class VoucherFactory {
      * @return the created voucher
      */
     public Voucher createVoucher(VoucherType type, @Nullable String data) {
-        data = data == null ? type.getDefaultData().orElse(null) : data;
+        data = data == null ? type.getSettings().getDefaultData().orElse(null) : data;
         return new Voucher(UUID.randomUUID(), data, type);
     }
 
     public ItemStack createVoucherItem(Voucher voucher, @Nullable final String data, @Nullable OfflinePlayer player) {
-        ItemConfig descriptor = voucher.getType().getItemDescriptor();
+        ItemConfig descriptor = voucher.getType().getSettings().getItemDescriptor().orElse(null);
         if (descriptor == null) {
             throw new IllegalArgumentException("Voucher type " + voucher.getType().getId() + " can't create items");
         }
         MessageFormatter withValuePlaceholder = data == null ? messageFormatter : messageFormatter.withExtraHooks(
-                new SimpleFormattingHook((s, p) -> s.replace(Voucher.DATA_PLACEHOLDER, data))
+                new SimpleFormattingHook((s, p) -> s.replace(VoucherUsageHandler.DATA_PLACEHOLDER, data))
         );
         if (player != null) {
             withValuePlaceholder = withValuePlaceholder.withExtraHooks(
-                    new SimpleFormattingHook((s, p) -> s.replace(Voucher.PLAYER_PLACEHOLDER, player.getName()))
+                    new SimpleFormattingHook((s, p) -> s.replace(VoucherUsageHandler.PLAYER_PLACEHOLDER, player.getName()))
             );
 
         }
