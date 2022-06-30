@@ -8,7 +8,6 @@ import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -31,14 +30,11 @@ public class VoucherTypeLoader {
 
     public VoucherType load(String id, VoucherConfig.VoucherType fromConfig) {
         List<Action> actions = fromConfig.actions().stream()
-                .map(msg -> {
-                    Optional<Action> opt = actionParser.parse(msg);
-                    if (opt.isPresent()) {
-                        return opt.get();
-                    }
-                    logger.warning(() -> "Could not parse action " + msg + " for voucher type " + id);
-                    return null;
-                })
+                .map(msg ->
+                        actionParser.parse(msg).orElseGet(() -> {
+                            logger.warning(() -> "Could not parse action " + msg + " for voucher type " + id);
+                            return null;
+                        }))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 

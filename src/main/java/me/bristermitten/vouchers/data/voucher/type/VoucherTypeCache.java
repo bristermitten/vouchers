@@ -48,8 +48,7 @@ public class VoucherTypeCache implements VoucherTypeRegistry {
         if (voucherTypes.containsKey(id)) {
             return Optional.of(voucherTypes.get(id));
         }
-        return Optional.ofNullable(configProvider.get()
-                        .voucherTypes().get(id))
+        return Optional.ofNullable(configProvider.get().voucherTypes().get(id))
                 .map(config -> loader.load(id, config));
     }
 }
