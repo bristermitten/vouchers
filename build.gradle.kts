@@ -34,6 +34,7 @@ repositories {
     maven("https://repo.triumphteam.dev/releases/")
     maven("https://repo.aikar.co/content/groups/aikar/")
     maven("https://repo.codemc.org/repository/maven-public/")
+    maven("https://jitpack.io")
 }
 
 val shade: Configuration by configurations.creating {
@@ -54,7 +55,9 @@ dependencies {
     onClasspath("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
     proguard("org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT")
 
-//    compileOnly("net.luckperms:api:5.4")
+    // Plugin dependencies
+    onClasspath("com.github.MilkBowl:VaultAPI:1.7")
+    onClasspath("net.luckperms:api:5.4")
 
     val mittenLibVersion = "1.0.25-SNAPSHOT"
     shade("me.bristermitten:mittenlib-core:$mittenLibVersion")

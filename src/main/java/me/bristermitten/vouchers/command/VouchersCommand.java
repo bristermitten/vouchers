@@ -4,18 +4,10 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
-import co.aikar.commands.bukkit.contexts.OnlinePlayer;
-import me.bristermitten.mittenlib.collections.Maps;
 import me.bristermitten.mittenlib.commands.Command;
-import me.bristermitten.mittenlib.util.lambda.Functions;
-import me.bristermitten.vouchers.data.voucher.Voucher;
-import me.bristermitten.vouchers.data.voucher.VoucherRegistry;
-import me.bristermitten.vouchers.data.voucher.VoucherUsageHandler;
-import me.bristermitten.vouchers.data.voucher.type.VoucherTypeRegistry;
-import me.bristermitten.vouchers.lang.VouchersLangService;
+import me.bristermitten.vouchers.hooks.PermissionChecker;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
@@ -23,28 +15,28 @@ import javax.inject.Inject;
 @CommandAlias("vouchers|voucher")
 public class VouchersCommand extends Command {
 
-    private final VoucherRegistry voucherRegistry;
-    private final VoucherTypeRegistry voucherTypeRegistry;
-    private final VouchersLangService langService;
+    private final CommonVoucherMethods commonVoucherMethods;
+    private final PermissionChecker permissionChecker;
 
     @Inject
-    public VouchersCommand(VoucherRegistry voucherRegistry, VoucherTypeRegistry voucherTypeRegistry, VouchersLangService langService) {
-        this.voucherRegistry = voucherRegistry;
-        this.voucherTypeRegistry = voucherTypeRegistry;
-        this.langService = langService;
+    public VouchersCommand(CommonVoucherMethods commonVoucherMethods, PermissionChecker permissionChecker) {
+        this.commonVoucherMethods = commonVoucherMethods;
+        this.permissionChecker = permissionChecker;
     }
 
     @Subcommand("give")
     @CommandCompletion("@players @voucherIds")
-    public void give(CommandSender sender, OnlinePlayer target, String voucherId, @Optional @Nullable String data) {
-        Player targetPlayer = target.getPlayer();
-        voucherTypeRegistry.get(voucherId).ifPresent(voucherType -> {
-            Voucher voucher = voucherRegistry.create(voucherType, data);
-            ItemStack voucherItem = voucherRegistry.createVoucherItem(voucher, targetPlayer);
-            targetPlayer.getInventory().addItem(voucherItem);
-            voucher.getType().getSettings().getReceiveMessage().ifPresent(receiveMessage ->
-                    langService.send(targetPlayer, Functions.constant(receiveMessage),
-                            Maps.of(VoucherUsageHandler.DATA_PLACEHOLDER, String.valueOf(data))));
-        });
+    public void give(CommandSender sender, OfflinePlayer target, String voucherId, @Optional @Nullable String data) {
+        boolean claimBox;
+        if (target.isOnline()) {
+            claimBox = false;
+        } else {
+            if (!target.hasPlayedBefore() || target.getName() == null) {
+                claimBox = true; // Add it just to be safe, it's not like they can open it anyway
+            } else {
+                claimBox = permissionChecker.has(target, "mittenvouchers.claimbox");
+            }
+        }
+        commonVoucherMethods.giveVoucher(sender, target, voucherId, data, claimBox);
     }
 }

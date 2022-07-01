@@ -4,6 +4,7 @@ errors:
   claimbox-empty-other: "&c{player}'s ClaimBox is empty!"
   no-permission: "&cYou don't have permission to use this command"
   unknown-player: "&cUnknown player {text}"
+  player-offline: "<red>{player} is offline so cannot be given a voucher item!"
   invalid-boolean: "&cInvalid boolean {text}, expected <true|false>"
   unknown-voucher: "&cUnknown voucher {id}. Note that voucher codes cannot be used"
   unknown-command: "&cUnknown Command, type /claimbox help for help"

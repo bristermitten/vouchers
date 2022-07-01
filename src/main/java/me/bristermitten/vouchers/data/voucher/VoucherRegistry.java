@@ -38,8 +38,7 @@ public class VoucherRegistry extends CachingPersistence<UUID, Voucher> implement
 
     public @NotNull CompletableFuture<Voucher> createAndSave(VoucherType type, @Nullable String data) {
         Voucher voucher = create(type, data);
-        return save(voucher)
-                .thenApply(v -> voucher);
+        return save(voucher).thenApply(v -> voucher);
     }
 
 

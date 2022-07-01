@@ -17,6 +17,7 @@ import me.bristermitten.vouchers.data.voucher.VoucherModule;
 import me.bristermitten.vouchers.data.voucher.VoucherUsageListener;
 import me.bristermitten.vouchers.data.voucher.persistence.VoucherPersistence;
 import me.bristermitten.vouchers.database.DatabaseModule;
+import me.bristermitten.vouchers.hooks.HookModule;
 import me.bristermitten.vouchers.lang.ClaimBoxesLangConfig;
 import me.bristermitten.vouchers.persist.Persistence;
 import me.bristermitten.vouchers.util.GlowEnchant;
@@ -49,7 +50,8 @@ public class MittenVouchers extends JavaPlugin {
                         new MiniMessageModule(),
                         new PAPIModule(),
                         new FileWatcherModule(),
-                        new VouchersCommandsModule())
+                        new VouchersCommandsModule(),
+                        new HookModule())
                 .build();
 
         injector.injectMembers(this);

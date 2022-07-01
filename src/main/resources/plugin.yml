@@ -5,3 +5,5 @@ author: BristerMitten
 api-version: 1.13
 softdepend:
   - PlaceholderAPI
+  - Vault
+  - LuckPerms
