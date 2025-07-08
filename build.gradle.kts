@@ -3,7 +3,7 @@ import proguard.gradle.ProGuardTask
 
 plugins {
 	java
-	id("com.github.johnrengelman.shadow") version "7.1.0"
+	id("com.gradleup.shadow") version "8.3.8"
 }
 
 group = "me.bristermitten"
@@ -78,12 +78,14 @@ dependencies {
 	shade("de.tr7zw:item-nbt-api:2.9.2")
 	shade("com.github.cryptomorin:XSeries:13.3.3")
 
-	testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+	testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
 	testImplementation("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
-	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 //	testImplementation("com.h2database:h2:2.1.212")
 	testImplementation("com.github.bristermitten:MockBukkit:93122b01fcbb3f66b211aede5eb66000e78b117f")
 	testImplementation("ch.qos.logback:logback-classic:1.5.18")
+	testImplementation("org.fusesource.jansi:jansi:+")
 
 	testImplementation("org.mariadb.jdbc:mariadb-java-client:3.5.4")
 	testImplementation("org.testcontainers:mariadb:1.21.3")
