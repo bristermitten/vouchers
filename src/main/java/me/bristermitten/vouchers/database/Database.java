@@ -24,13 +24,13 @@ public interface Database {
     <T> @NotNull CompletableFuture<T> query(@Language("MariaDB") String query, SafeConsumer<PreparedStatement> initializer, SafeFunction<ResultSet, T> process);
 
     @NotNull
-    CompletableFuture<Integer> update(@Language("MariaDB") String query, SafeConsumer<PreparedStatement> initializer);
+    CompletableFuture<Integer> update(@Language("SQL") String query, SafeConsumer<PreparedStatement> initializer);
 
     @NotNull
-    CompletableFuture<Unit> execute(@Language("MariaDB") String query, SafeConsumer<PreparedStatement> initializer);
+    CompletableFuture<Unit> execute(@Language("SQL") String query, SafeConsumer<PreparedStatement> initializer);
 
     default @NotNull
-    CompletableFuture<Unit> execute(@Language("MariaDB") String query) {
+    CompletableFuture<Unit> execute(@Language("SQL") String query) {
         return execute(query, unused -> {
         });
     }

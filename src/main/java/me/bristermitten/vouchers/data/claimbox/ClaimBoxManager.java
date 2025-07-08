@@ -1,6 +1,7 @@
 package me.bristermitten.vouchers.data.claimbox;
 
 import me.bristermitten.mittenlib.util.Unit;
+import me.bristermitten.vouchers.data.claimbox.persistence.ClaimBoxPersistence;
 import me.bristermitten.vouchers.data.claimbox.persistence.SQLClaimBoxPersistence;
 import me.bristermitten.vouchers.data.voucher.Voucher;
 import org.jetbrains.annotations.Nullable;
@@ -12,10 +13,10 @@ import java.util.concurrent.CompletableFuture;
 
 public class ClaimBoxManager {
     private final ClaimBoxStorage claimBoxStorage;
-    private final SQLClaimBoxPersistence persistence;
+    private final ClaimBoxPersistence persistence;
 
     @Inject
-    public ClaimBoxManager(ClaimBoxStorage claimBoxStorage, SQLClaimBoxPersistence persistence) {
+    public ClaimBoxManager(ClaimBoxStorage claimBoxStorage, ClaimBoxPersistence persistence) {
         this.claimBoxStorage = claimBoxStorage;
         this.persistence = persistence;
     }

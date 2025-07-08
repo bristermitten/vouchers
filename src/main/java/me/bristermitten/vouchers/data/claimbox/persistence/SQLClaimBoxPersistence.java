@@ -41,7 +41,11 @@ public class SQLClaimBoxPersistence implements ClaimBoxPersistence {
     @Override
     @NotNull
     public CompletableFuture<Unit> init() {
-        return database.execute("create table if not exists " + tableName() + "\n" + "(\n" + "    owner VARCHAR(36),\n" + "    voucher_id VARCHAR(100) REFERENCES " + tnf.getTableName("Vouchers") + "(id) \n" + ")\n");
+        return database.execute("create table if not exists " + tableName() + "\n" +
+                                "(\n"
+                                + "    owner      VARCHAR(36),\n"
+                                + "    voucher_id VARCHAR(100) REFERENCES " + tnf.getTableName("Vouchers") + " (id)\n"
+                                + ")\n");
     }
 
     @Override
@@ -70,16 +74,16 @@ public class SQLClaimBoxPersistence implements ClaimBoxPersistence {
         return database.execute("DELETE FROM " + tableName() + " WHERE owner = ?", statement -> statement.setString(1, id.toString()));
     }
 
-    @NotNull
-    public CompletableFuture<Unit> removeOne(@NotNull UUID id, Voucher voucher) {
+    @Override
+    public @NotNull CompletableFuture<Unit> removeOne(@NotNull UUID id, Voucher voucher) {
         return database.execute("DELETE FROM " + tableName() + " WHERE owner = ? AND voucher_id = ? LIMIT 1", statement -> {
             statement.setString(1, id.toString());
             statement.setString(2, voucher.getId().toString());
         });
     }
 
-    @NotNull
-    public CompletableFuture<Unit> addOne(@NotNull UUID id, Voucher voucherId) {
+    @Override
+    public @NotNull CompletableFuture<Unit> addOne(@NotNull UUID id, Voucher voucherId) {
         return database.execute("INSERT INTO " + tableName() + " (owner, voucher_id) values (?, ?)", preparedStatement -> {
             preparedStatement.setString(1, id.toString());
             preparedStatement.setString(2, voucherId.getId().toString());

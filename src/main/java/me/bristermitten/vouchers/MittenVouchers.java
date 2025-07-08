@@ -3,6 +3,7 @@ package me.bristermitten.vouchers;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import me.bristermitten.mittenlib.MittenLib;
+import me.bristermitten.mittenlib.lang.LangModule;
 import me.bristermitten.mittenlib.minimessage.MiniMessageModule;
 import me.bristermitten.mittenlib.papi.PAPIModule;
 import me.bristermitten.mittenlib.util.Futures;
@@ -22,8 +23,11 @@ import me.bristermitten.vouchers.lang.ClaimBoxesLangConfig;
 import me.bristermitten.vouchers.persist.Persistence;
 import me.bristermitten.vouchers.util.GlowEnchant;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 
+import java.io.File;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
@@ -36,6 +40,13 @@ public class MittenVouchers extends JavaPlugin {
     private ClaimboxUpdateTask autoSaveTask;
 
     private List<Persistence<?, ?>> persistences;
+
+    public MittenVouchers(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
+        super(loader, description, dataFolder, file);
+    }
+
+    public MittenVouchers() {
+    }
 
     @Override
     public void onEnable() {
@@ -51,7 +62,8 @@ public class MittenVouchers extends JavaPlugin {
                         new PAPIModule(),
                         new FileWatcherModule(),
                         new VouchersCommandsModule(),
-                        new HookModule())
+                        new HookModule(),
+                        new LangModule())
                 .build();
 
         injector.injectMembers(this);

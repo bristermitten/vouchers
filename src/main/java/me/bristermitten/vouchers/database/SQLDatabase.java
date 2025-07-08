@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import me.bristermitten.mittenlib.util.Unit;
 import me.bristermitten.mittenlib.util.lambda.SafeConsumer;
 import me.bristermitten.mittenlib.util.lambda.SafeFunction;
+import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
@@ -26,18 +27,17 @@ public class SQLDatabase implements Database {
         return CompletableFuture.supplyAsync(() -> {
             try (final Connection connection = hikariDataSource.getConnection()) {
                 return body.apply(connection);
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 throw new RuntimePersistException(e);
             }
         });
     }
-@Override
-    public <T> CompletableFuture<T> runWithStatement(String query, SafeFunction<PreparedStatement, T> block) {
+
+    @Override
+    public <T> CompletableFuture<T> runWithStatement(@Language("SQL") String query, SafeFunction<PreparedStatement, T> block) {
         return withConnection(connection -> {
             try (final PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 return block.apply(preparedStatement);
-            } catch (SQLException e) {
-                throw new RuntimePersistException(e);
             }
         });
     }
@@ -83,8 +83,8 @@ public class SQLDatabase implements Database {
                 trans.withConnection(c -> {
                     c.commit();
                     return null;
-                });
-            } catch (SQLException e) {
+                }).join();
+            } catch (Throwable e) {
                 connection.rollback();
                 throw new RuntimePersistException(e);
             } finally {
@@ -112,6 +112,8 @@ public class SQLDatabase implements Database {
                             try {
                                 Objects.requireNonNull(connection, "Transaction closed");
                                 return body.apply(connection);
+                            } catch (RuntimePersistException e) {
+                                throw e;
                             } catch (Throwable e) {
                                 throw new RuntimePersistException(e);
                             }

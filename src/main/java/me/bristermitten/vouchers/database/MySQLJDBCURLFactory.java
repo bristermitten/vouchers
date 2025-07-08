@@ -1,5 +1,6 @@
 package me.bristermitten.vouchers.database;
 
+
 import me.bristermitten.vouchers.config.ClaimBoxesConfig;
 
 public class MySQLJDBCURLFactory implements JDBCURLFactory {

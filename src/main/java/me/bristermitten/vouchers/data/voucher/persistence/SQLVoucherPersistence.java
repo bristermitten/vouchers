@@ -37,15 +37,15 @@ public class SQLVoucherPersistence implements VoucherPersistence {
     public @NotNull CompletableFuture<Unit> init() {
         return database.execute(
                 "CREATE TABLE IF NOT EXISTS " + tableName() + "\n" +
-                        "(\n" +
-                        "    id           char(36)             not null\n" +
-                        "        primary key,\n" +
-                        "    used         tinyint(1) default 0 null,\n" +
-                        "    voucher_type varchar(1000)        null,\n" +
-                        "    data         varchar(1000)        null\n" +
-                        ");\n" +
-                        "\n"
+                "(\n" +
+                "    id           char(36)              not null " +
+                "primary key,\n" +
+                "    used         boolean default false not null,\n" +
+                "    voucher_type varchar(1000)         null,\n" +
+                "    data         varchar(1000)         null\n" +
+                ");\n"
         );
+
     }
 
     private @NotNull List<Voucher> fromResultSet(@NotNull ResultSet resultSet) {
@@ -97,8 +97,11 @@ public class SQLVoucherPersistence implements VoucherPersistence {
     @Override
     public @NotNull CompletableFuture<Unit> saveAll(@NotNull Collection<Voucher> values) {
         return database.runTransactionally(db ->
-                db.runWithStatement("INSERT INTO " + tableName() + " (id, used, voucher_type, data) VALUES (?, ?, ?, ?) " +
-                                "ON DUPLICATE KEY UPDATE used = VALUES(used), voucher_type = VALUES(voucher_type), data = VALUES(data)"
+                db.runWithStatement("INSERT INTO " + tableName() + " (id, used, voucher_type, data)\n" +
+                                    "VALUES (?, ?, ?, ?)\n" +
+                                    "ON DUPLICATE KEY UPDATE used         = VALUES(used),\n" +
+                                    "                        voucher_type = VALUES(voucher_type),\n" +
+                                    "                        data         = VALUES(data)"
                         , statement -> {
                             for (Voucher voucher : values) {
                                 statement.setString(1, voucher.getId().toString());
@@ -108,6 +111,6 @@ public class SQLVoucherPersistence implements VoucherPersistence {
                                 statement.addBatch();
                             }
                             statement.executeBatch();
-                        }));
+                        }).join());
     }
 }

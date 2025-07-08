@@ -18,7 +18,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
 @Singleton
-public class VoucherRegistry extends CachingPersistence<UUID, Voucher> implements VoucherPersistence {
+public class VoucherRegistry extends CachingPersistence<UUID, Voucher, VoucherPersistence> implements VoucherPersistence {
     private final VoucherFactory factory;
 
     private final Logger logger;

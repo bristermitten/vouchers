@@ -18,12 +18,12 @@ import java.util.function.Function;
 import static java.util.Optional.of;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 
-public class CachingPersistence<I, T> implements Persistence<I, T> {
+public class CachingPersistence<I, T, P extends Persistence<I, T>> implements Persistence<I, T> {
     protected final Cache<I, T> cache = createCache();
-    private final Persistence<I, T> delegate;
+    protected final P delegate;
     private final Function<T, I> idFunction;
 
-    public CachingPersistence(Persistence<I, T> delegate, Function<T, I> idFunction) {
+    public CachingPersistence(P delegate, Function<T, I> idFunction) {
         this.delegate = delegate;
         this.idFunction = idFunction;
     }

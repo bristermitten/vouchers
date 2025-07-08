@@ -1,9 +1,11 @@
 package me.bristermitten.vouchers.data.claimbox;
 
 import com.google.inject.Singleton;
+import me.bristermitten.mittenlib.util.Unit;
 import me.bristermitten.vouchers.data.claimbox.persistence.ClaimBoxPersistence;
-import me.bristermitten.vouchers.data.claimbox.persistence.SQLClaimBoxPersistence;
+import me.bristermitten.vouchers.data.voucher.Voucher;
 import me.bristermitten.vouchers.persist.CachingPersistence;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import java.util.Collections;
@@ -12,11 +14,11 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
 @Singleton
-public class ClaimBoxStorage extends CachingPersistence<UUID, ClaimBox> implements ClaimBoxPersistence {
+public class ClaimBoxStorage extends CachingPersistence<UUID, ClaimBox, ClaimBoxPersistence> implements ClaimBoxPersistence {
     private final Logger logger = Logger.getLogger(ClaimBoxStorage.class.getName());
 
     @Inject
-    public ClaimBoxStorage(SQLClaimBoxPersistence delegate) {
+    public ClaimBoxStorage(ClaimBoxPersistence delegate) {
         super(delegate, ClaimBox::getOwner);
     }
 
@@ -50,6 +52,18 @@ public class ClaimBoxStorage extends CachingPersistence<UUID, ClaimBox> implemen
     }
 
     public CompletableFuture<ClaimBox> getOrCreate(UUID id) {
-        return load(id).thenCompose(opt -> opt.map(CompletableFuture::completedFuture).orElseGet(() -> createNewBox(id)));
+        return load(id)
+                .thenCompose(opt -> opt.map(CompletableFuture::completedFuture)
+                        .orElseGet(() -> createNewBox(id)));
+    }
+
+    @Override
+    public @NotNull CompletableFuture<Unit> removeOne(@NotNull UUID id, Voucher voucher) {
+        return delegate.removeOne(id, voucher);
+    }
+
+    @Override
+    public @NotNull CompletableFuture<Unit> addOne(@NotNull UUID id, Voucher voucherId) {
+        return delegate.addOne(id, voucherId);
     }
 }
