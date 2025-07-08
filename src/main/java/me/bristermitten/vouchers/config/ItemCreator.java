@@ -77,7 +77,7 @@ public class ItemCreator {
         }
         if (config.enchantments() != null) {
             config.enchantments().forEach(enchantment -> {
-                Enchantment enchant = enchantment.type().getEnchant();
+                Enchantment enchant = enchantment.type().get();
                 Objects.requireNonNull(enchant, "Unknown enchantment type: " + enchantment.type());
                 meta.addEnchant(enchant, enchantment.level(), true);
             });

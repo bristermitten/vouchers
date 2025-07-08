@@ -93,7 +93,6 @@ class SQLClaimBoxPersistenceTest {
         voucherPersistence.init().join();
         sqlClaimBoxPersistence.init().join();
         voucherPersistence.save(voucher).join();
-        System.out.println(voucherPersistence.loadAll().join());
         sqlClaimBoxPersistence.save(box).join();
 
         Collection<ClaimBox> fromDatabase = sqlClaimBoxPersistence.loadAll().join();

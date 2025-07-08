@@ -12,6 +12,7 @@ import me.bristermitten.vouchers.util.Pair;
 import me.bristermitten.vouchers.util.ResultSetUtil;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Untainted;
 import javax.inject.Inject;
 import java.sql.ResultSet;
 import java.util.*;
@@ -34,6 +35,7 @@ public class SQLClaimBoxPersistence implements ClaimBoxPersistence {
     }
 
 
+    @Untainted
     private String tableName() {
         return tnf.getTableName("ClaimBoxes");
     }
