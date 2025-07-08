@@ -61,8 +61,6 @@ class SQLClaimBoxPersistenceTest {
                 () -> new ClaimBoxesConfig.DatabaseConfig("", "", 0, mariaDB.getUsername(), mariaDB.getPassword(), ""),
                 urlFactory
         ).get();
-        final HikariDataSource hikariDataSource = new HikariDataSource(hikariConfig);
-        Database database = new SQLDatabase(hikariDataSource);
         final Injector injector = MittenLib.withDefaults(plugin)
                 .addConfigModules(ClaimBoxesConfig.CONFIG, VoucherConfig.CONFIG)
                 .addModules(new VoucherModule(), new ActionModule())

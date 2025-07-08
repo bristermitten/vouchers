@@ -37,7 +37,7 @@ public class SQLDatabase implements Database, AutoCloseable {
         this.databaseExecutor = Executors.newFixedThreadPool(
                 Math.max(2, Runtime.getRuntime().availableProcessors() / 2),
                 r -> {
-                    Thread thread = new Thread(r, "Database-Worker");
+                    Thread thread = new Thread(r, "MittenVouchers Database-Worker");
                     thread.setDaemon(true);
                     return thread;
                 }

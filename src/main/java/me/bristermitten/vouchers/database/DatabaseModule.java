@@ -12,6 +12,7 @@ import me.bristermitten.vouchers.data.voucher.persistence.VoucherTypeTypeAdapter
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Provider;
+import javax.inject.Singleton;
 
 public class DatabaseModule extends AbstractModule {
     @Override
@@ -29,6 +30,7 @@ public class DatabaseModule extends AbstractModule {
     }
 
     @Provides
+    @Singleton
     public HikariDataSource getDataSource(HikariConfig config) {
         return new HikariDataSource(config);
     }
