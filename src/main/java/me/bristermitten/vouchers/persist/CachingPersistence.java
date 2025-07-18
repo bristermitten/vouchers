@@ -56,6 +56,11 @@ public class CachingPersistence<I, T, P extends Persistence<I, T>> implements Pe
 
     @Override
     public @NotNull CompletableFuture<Unit> cleanup() {
+        return flush();
+    }
+
+    @Override
+    public @NotNull CompletableFuture<Unit> flush() {
         return saveAll(cache.asMap().values()); // Flush the cache
     }
 

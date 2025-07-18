@@ -1,6 +1,8 @@
 package me.bristermitten.vouchers.data.claimbox;
 
+import com.google.gson.annotations.JsonAdapter;
 import me.bristermitten.vouchers.data.voucher.Voucher;
+import me.bristermitten.vouchers.data.voucher.persistence.VouchersByIDTypeAdapter;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.*;
@@ -8,6 +10,7 @@ import java.util.function.Consumer;
 
 public class ClaimBox {
     private final UUID owner;
+    @JsonAdapter(VouchersByIDTypeAdapter.class)
     private final Set<Voucher> vouchers;
 
     public ClaimBox(UUID owner, Set<Voucher> vouchers) {

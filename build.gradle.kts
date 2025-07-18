@@ -4,6 +4,7 @@ import proguard.gradle.ProGuardTask
 plugins {
 	java
 	id("com.gradleup.shadow") version "8.3.8"
+	id("xyz.jpenilla.run-paper") version "2.3.1"
 }
 
 group = "me.bristermitten"
@@ -63,7 +64,7 @@ dependencies {
 	onClasspath("com.github.MilkBowl:VaultAPI:1.7")
 	onClasspath("net.luckperms:api:5.4")
 
-	val mittenLibVersion = "4.2.10-SNAPSHOT"
+	val mittenLibVersion = "4.2.11-SNAPSHOT"
 	shade("me.bristermitten:mittenlib-core:$mittenLibVersion")
 	shade("me.bristermitten:mittenlib-commands:$mittenLibVersion")
 	shade("me.bristermitten:mittenlib-minimessage:$mittenLibVersion")
@@ -82,7 +83,6 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
 	testImplementation("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
-//	testImplementation("com.h2database:h2:2.1.212")
 	testImplementation("com.github.bristermitten:MockBukkit:93122b01fcbb3f66b211aede5eb66000e78b117f")
 	testImplementation("ch.qos.logback:logback-classic:1.5.18")
 	testImplementation("org.fusesource.jansi:jansi:+")
@@ -91,6 +91,7 @@ dependencies {
 	testImplementation("org.testcontainers:mariadb:1.21.3")
 	testImplementation("org.testcontainers:junit-jupiter:1.21.3")
 }
+
 
 tasks {
 	compileJava {
@@ -126,12 +127,15 @@ tasks {
 		minimize()
 		archiveFileName.set("app.jar")
 	}
+
+	runServer {
+		minecraftVersion("1.8.8")
+		downloadPlugins {
+			url("https://ci.viaversion.com/job/ViaVersion/1180/artifact/build/libs/ViaVersion-5.4.1.jar")
+		}
+	}
 }
 
-tasks.register<Copy>("copyJarToServerPlugins") {
-	from(tasks.getByPath("shadowJar"))
-	into(layout.projectDirectory.dir("server/plugins"))
-}
 
 tasks.register("depsize") {
 	description = "Prints dependencies for \"default\" configuration"
@@ -208,4 +212,12 @@ tasks.register<ProGuardTask>("proguardJar") {
 
 	verbose()
 
+}
+
+tasks.withType(xyz.jpenilla.runtask.task.AbstractRun::class) {
+	javaLauncher = javaToolchains.launcherFor {
+		vendor = JvmVendorSpec.JETBRAINS
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+	jvmArgs("-XX:+AllowEnhancedClassRedefinition")
 }

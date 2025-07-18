@@ -7,6 +7,7 @@ import me.bristermitten.vouchers.data.claimbox.ClaimBox;
 import me.bristermitten.vouchers.data.voucher.Voucher;
 import me.bristermitten.vouchers.data.voucher.VoucherRegistry;
 import me.bristermitten.vouchers.database.Database;
+import me.bristermitten.vouchers.persist.SQLPersistence;
 import me.bristermitten.vouchers.persist.TableNameFactory;
 import me.bristermitten.vouchers.util.Pair;
 import me.bristermitten.vouchers.util.ResultSetUtil;
@@ -20,7 +21,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static java.util.stream.Collectors.*;
 
-public class SQLClaimBoxPersistence implements ClaimBoxPersistence {
+public class SQLClaimBoxPersistence extends SQLPersistence<UUID, ClaimBox> implements ClaimBoxPersistence {
     private final Database database;
 
     private final TableNameFactory tnf;

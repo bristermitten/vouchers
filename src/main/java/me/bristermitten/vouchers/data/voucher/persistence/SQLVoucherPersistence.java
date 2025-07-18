@@ -5,6 +5,7 @@ import me.bristermitten.vouchers.data.voucher.Voucher;
 import me.bristermitten.vouchers.data.voucher.type.VoucherTypeRegistry;
 import me.bristermitten.vouchers.database.Database;
 import me.bristermitten.vouchers.database.RuntimePersistException;
+import me.bristermitten.vouchers.persist.SQLPersistence;
 import me.bristermitten.vouchers.persist.TableNameFactory;
 import me.bristermitten.vouchers.util.CollectionUtil;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +16,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-public class SQLVoucherPersistence implements VoucherPersistence {
+public class SQLVoucherPersistence extends SQLPersistence<UUID, Voucher> implements VoucherPersistence {
     private final Database database;
 
     private final VoucherTypeRegistry voucherTypeRegistry;

@@ -1,9 +1,6 @@
 package me.bristermitten.vouchers.command;
 
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandCompletion;
-import co.aikar.commands.annotation.Optional;
-import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.*;
 import me.bristermitten.mittenlib.commands.Command;
 import me.bristermitten.vouchers.hooks.PermissionChecker;
 import org.bukkit.OfflinePlayer;
@@ -27,16 +24,22 @@ public class VouchersCommand extends Command {
     @Subcommand("give")
     @CommandCompletion("@players @voucherIds")
     public void give(CommandSender sender, OfflinePlayer target, String voucherId, @Optional @Nullable String data) {
-        boolean claimBox;
+        boolean useClaimBox;
         if (target.isOnline()) {
-            claimBox = false;
+            useClaimBox = false;
         } else {
             if (!target.hasPlayedBefore() || target.getName() == null) {
-                claimBox = true; // Add it just to be safe, it's not like they can open it anyway
+                useClaimBox = true; // Add it just to be safe, it's not like they can open it anyway
             } else {
-                claimBox = permissionChecker.has(target, "mittenvouchers.claimbox");
+                useClaimBox = permissionChecker.has(target, "mittenvouchers.claimbox");
             }
         }
-        commonVoucherMethods.giveVoucher(sender, target, voucherId, data, claimBox);
+        commonVoucherMethods.giveVoucher(sender, target, voucherId, data, useClaimBox);
+    }
+
+    @Subcommand("help")
+    public void help() {
+        //noinspection deprecation
+        showCommandHelp();
     }
 }

@@ -3,7 +3,6 @@ package me.bristermitten.vouchers.data.voucher.persistence;
 import me.bristermitten.mittenlib.util.Unit;
 import me.bristermitten.mittenlib.util.lambda.Functions;
 import me.bristermitten.vouchers.config.ClaimBoxesConfig;
-import me.bristermitten.vouchers.config.ClaimBoxesConfigDTO;
 import me.bristermitten.vouchers.data.voucher.Voucher;
 import me.bristermitten.vouchers.persist.Persistence;
 import org.jetbrains.annotations.NotNull;
@@ -16,25 +15,25 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class VoucherPersistences implements VoucherPersistence {
-    private final SQLVoucherPersistence sqlVoucherPersistence;
+    private final Provider<SQLVoucherPersistence> sqlVoucherPersistence;
     private final JSONVoucherPersistence jsonVoucherPersistence;
     private final Provider<ClaimBoxesConfig> configProvider;
 
-    private ClaimBoxesConfigDTO.StorageConfigDTO.StorageType previous = null;
+    private ClaimBoxesConfig.StorageConfigDTO.StorageType previous = null;
 
     @Inject
-    public VoucherPersistences(SQLVoucherPersistence sqlVoucherPersistence, JSONVoucherPersistence jsonVoucherPersistence, Provider<ClaimBoxesConfig> configProvider) {
+    public VoucherPersistences(Provider<SQLVoucherPersistence> sqlVoucherPersistence, JSONVoucherPersistence jsonVoucherPersistence, Provider<ClaimBoxesConfig> configProvider) {
         this.sqlVoucherPersistence = sqlVoucherPersistence;
         this.jsonVoucherPersistence = jsonVoucherPersistence;
         this.configProvider = configProvider;
     }
 
     private CompletableFuture<VoucherPersistence> getCurrentImplementation() {
-        ClaimBoxesConfigDTO.StorageConfigDTO.StorageType type = configProvider.get().storage().type();
+        ClaimBoxesConfig.StorageConfigDTO.StorageType type = configProvider.get().storage().type();
         VoucherPersistence persistence;
         switch (type) {
             case SQL:
-                persistence = sqlVoucherPersistence;
+                persistence = sqlVoucherPersistence.get();
                 break;
             case JSON:
                 persistence = jsonVoucherPersistence;
@@ -46,6 +45,7 @@ public class VoucherPersistences implements VoucherPersistence {
             previous = type;
             return persistence.init().thenApply(Functions.constant(persistence)); // Set up the new persistence
         }
+        previous = type;
         return CompletableFuture.completedFuture(persistence);
     }
 
@@ -59,6 +59,12 @@ public class VoucherPersistences implements VoucherPersistence {
     public @NotNull CompletableFuture<Unit> cleanup() {
         return getCurrentImplementation().thenCompose(VoucherPersistence::cleanup);
     }
+
+    @Override
+    public @NotNull CompletableFuture<Unit> flush() {
+        return getCurrentImplementation().thenCompose(VoucherPersistence::flush);
+    }
+
 
     @Override
     public @NotNull CompletableFuture<Unit> save(@NotNull Voucher value) {

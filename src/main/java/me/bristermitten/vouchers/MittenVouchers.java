@@ -10,7 +10,7 @@ import me.bristermitten.mittenlib.util.Futures;
 import me.bristermitten.mittenlib.watcher.FileWatcherModule;
 import me.bristermitten.vouchers.actions.ActionModule;
 import me.bristermitten.vouchers.command.VouchersCommandsModule;
-import me.bristermitten.vouchers.config.ClaimBoxesConfig;
+import me.bristermitten.vouchers.config.ClaimBoxesConfigImpl;
 import me.bristermitten.vouchers.config.VoucherConfig;
 import me.bristermitten.vouchers.data.claimbox.ClaimBoxDataModule;
 import me.bristermitten.vouchers.data.claimbox.persistence.ClaimBoxPersistence;
@@ -30,16 +30,18 @@ import org.bukkit.plugin.java.JavaPluginLoader;
 import java.io.File;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class MittenVouchers extends JavaPlugin {
     @Inject
     private ClaimboxUpdateTask autoSaveTask;
 
-    private List<Persistence<?, ?>> persistences;
+    private List<Persistence<?, ?>> persistences = new ArrayList<>();
 
     public MittenVouchers(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
         super(loader, description, dataFolder, file);
@@ -50,20 +52,19 @@ public class MittenVouchers extends JavaPlugin {
 
     @Override
     public void onEnable() {
-
         final Injector injector = MittenLib.withDefaults(this)
-                .addConfigModules(ClaimBoxesConfig.CONFIG, ClaimBoxesLangConfig.CONFIG, VoucherConfig.CONFIG)
+                .addConfigModules(ClaimBoxesConfigImpl.CONFIG, ClaimBoxesLangConfig.CONFIG, VoucherConfig.CONFIG)
                 .addModules(
                         new DatabaseModule(),
                         new ClaimBoxDataModule(),
                         new VoucherModule(),
                         new ActionModule(),
-                        new MiniMessageModule(),
                         new PAPIModule(),
                         new FileWatcherModule(),
                         new VouchersCommandsModule(),
                         new HookModule(),
-                        new LangModule())
+                        new LangModule(),
+                        new MiniMessageModule())
                 .build();
 
         injector.injectMembers(this);
@@ -83,7 +84,7 @@ public class MittenVouchers extends JavaPlugin {
         Futures.sequence(persistences.stream().map(Persistence::init).collect(Collectors.toList()))
                 .whenComplete((v, e) -> {
                     if (e != null) {
-                        e.printStackTrace();
+                        getLogger().log(Level.SEVERE, "Failed to initialize persistence!", e);
                         Bukkit.getPluginManager().disablePlugin(this);
                         return;
                     }

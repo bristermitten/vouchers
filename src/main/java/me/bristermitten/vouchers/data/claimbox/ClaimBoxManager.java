@@ -1,71 +1,59 @@
 package me.bristermitten.vouchers.data.claimbox;
 
+import me.bristermitten.mittenlib.util.Futures;
 import me.bristermitten.mittenlib.util.Unit;
-import me.bristermitten.vouchers.data.claimbox.persistence.ClaimBoxPersistence;
-import me.bristermitten.vouchers.data.claimbox.persistence.SQLClaimBoxPersistence;
 import me.bristermitten.vouchers.data.voucher.Voucher;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
+/**
+ * Manages ClaimBox entities and provides operations for manipulating them.
+ * This class serves as the primary interface for ClaimBox operations.
+ */
 public class ClaimBoxManager {
-    private final ClaimBoxStorage claimBoxStorage;
-    private final ClaimBoxPersistence persistence;
+    private final ClaimBoxStorage storage;
 
     @Inject
-    public ClaimBoxManager(ClaimBoxStorage claimBoxStorage, ClaimBoxPersistence persistence) {
-        this.claimBoxStorage = claimBoxStorage;
-        this.persistence = persistence;
+    public ClaimBoxManager(ClaimBoxStorage storage) {
+        this.storage = storage;
     }
 
     public CompletableFuture<Unit> reset(ClaimBox claimBox) {
         claimBox.editVouchers(Set::clear);
-        return persistence.delete(claimBox.getOwner())
-                .exceptionally(e -> {
-                    e.printStackTrace();
-                    return null;
-                });
+        return storage.delete(claimBox.getOwner());
     }
 
     public CompletableFuture<ClaimBox> getBox(UUID owner) {
-        return claimBoxStorage.getOrCreate(owner);
+        return storage.getOrCreate(owner);
     }
 
     public CompletableFuture<Unit> give(ClaimBox claimBox, Voucher voucher) {
         claimBox.editVouchers(v -> v.add(voucher));
-        return persistence.addOne(claimBox.getOwner(), voucher)
-                .exceptionally(e -> {
-                    e.printStackTrace();
-                    return null;
-                });
+        return storage.addOne(claimBox.getOwner(), voucher);
     }
 
-
-    public void remove(ClaimBox claimBox, Voucher voucher) {
+    public CompletableFuture<Unit> remove(ClaimBox claimBox, Voucher voucher) {
         claimBox.editVouchers(v -> v.remove(voucher));
-        persistence.removeOne(claimBox.getOwner(), voucher)
-                .exceptionally(e -> {
-                    e.printStackTrace();
-                    return null;
-                });
+        return storage.removeOne(claimBox.getOwner(), voucher);
     }
 
     public CompletableFuture<Set<UUID>> giveAll(String group, boolean online, String voucherId, @Nullable String arg) {
         throw new UnsupportedOperationException("TODO");
     }
 
-    public CompletableFuture<Void> resetAll() {
-        return claimBoxStorage.loadAll()
-                .thenRun(() -> {
-                    for (ClaimBox value : claimBoxStorage.lookupAll().values()) {
-                        reset(value);
-                    }
-                }).exceptionally(e -> {
-                    e.printStackTrace();
-                    return null;
+    public CompletableFuture<Unit> resetAll() {
+        return storage.loadAll()
+                .thenCompose(claimBoxes -> {
+                    List<CompletableFuture<Unit>> resetFutures = claimBoxes.stream()
+                            .map(this::reset)
+                            .collect(Collectors.toList());
+                    return Futures.sequence(resetFutures).thenApply(results -> Unit.UNIT);
                 });
     }
 }

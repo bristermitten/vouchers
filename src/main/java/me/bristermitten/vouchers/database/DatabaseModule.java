@@ -6,6 +6,7 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import me.bristermitten.mittenlib.config.provider.DelegatingConfigProvider;
 import me.bristermitten.mittenlib.files.json.ExtraTypeAdapter;
 import me.bristermitten.vouchers.config.ClaimBoxesConfig;
 import me.bristermitten.vouchers.data.voucher.persistence.VoucherTypeTypeAdapter;

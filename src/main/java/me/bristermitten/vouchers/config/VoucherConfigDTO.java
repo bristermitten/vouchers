@@ -20,7 +20,7 @@ public class VoucherConfigDTO {
     static class VoucherTypeDTO {
         @Nullable String defaultValue;
         @Nullable String permission;
-        @Nullable ItemConfigDTO item;
+        @Nullable ItemConfig item;
 
         @Nullable LangMessage receiveMessage;
         @Nullable LangMessage redeemMessage;

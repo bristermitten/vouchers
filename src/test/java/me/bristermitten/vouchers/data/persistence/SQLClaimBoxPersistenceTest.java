@@ -3,10 +3,9 @@ package me.bristermitten.vouchers.data.persistence;
 import be.seeseemelk.mockbukkit.MockBukkit;
 import com.google.inject.Injector;
 import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import me.bristermitten.mittenlib.MittenLib;
 import me.bristermitten.vouchers.actions.ActionModule;
-import me.bristermitten.vouchers.config.ClaimBoxesConfig;
+import me.bristermitten.vouchers.config.ClaimBoxesConfigImpl;
 import me.bristermitten.vouchers.config.VoucherConfig;
 import me.bristermitten.vouchers.data.claimbox.ClaimBox;
 import me.bristermitten.vouchers.data.claimbox.persistence.SQLClaimBoxPersistence;
@@ -18,7 +17,9 @@ import me.bristermitten.vouchers.data.voucher.persistence.VoucherPersistence;
 import me.bristermitten.vouchers.data.voucher.type.VoucherCodeType;
 import me.bristermitten.vouchers.data.voucher.type.VoucherTypeRegistry;
 import me.bristermitten.vouchers.data.voucher.type.VoucherTypeSettings;
-import me.bristermitten.vouchers.database.*;
+import me.bristermitten.vouchers.database.DatabaseModule;
+import me.bristermitten.vouchers.database.HikariConfigurationProvider;
+import me.bristermitten.vouchers.database.JDBCURLFactory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,11 +59,11 @@ class SQLClaimBoxPersistenceTest {
     void save() {
         JDBCURLFactory urlFactory = config -> mariaDB.getJdbcUrl();
         final HikariConfig hikariConfig = new HikariConfigurationProvider(
-                () -> new ClaimBoxesConfig.DatabaseConfig("", "", 0, mariaDB.getUsername(), mariaDB.getPassword(), ""),
+                () -> new ClaimBoxesConfigImpl.DatabaseConfigImpl("", "", 0, mariaDB.getUsername(), mariaDB.getPassword(), ""),
                 urlFactory
         ).get();
         final Injector injector = MittenLib.withDefaults(plugin)
-                .addConfigModules(ClaimBoxesConfig.CONFIG, VoucherConfig.CONFIG)
+                .addConfigModules(ClaimBoxesConfigImpl.CONFIG, VoucherConfig.CONFIG)
                 .addModules(new VoucherModule(), new ActionModule())
                 .addModules(new DatabaseModule())
                 .addModules(new DatabaseModule() {

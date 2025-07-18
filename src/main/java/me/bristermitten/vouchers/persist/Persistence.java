@@ -41,6 +41,10 @@ public interface Persistence<I, T> {
         return Unit.unitFuture();
     }
 
+    @NotNull
+    CompletableFuture<Unit> flush();
+
+
     /**
      * Save a value to the Persistence's source
      *
