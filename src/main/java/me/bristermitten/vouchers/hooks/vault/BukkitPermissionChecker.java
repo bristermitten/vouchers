@@ -1,5 +1,6 @@
-package me.bristermitten.vouchers.hooks;
+package me.bristermitten.vouchers.hooks.vault;
 
+import me.bristermitten.vouchers.hooks.PermissionChecker;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.Plugin;
 

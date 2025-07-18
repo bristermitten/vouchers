@@ -132,6 +132,8 @@ tasks {
 		minecraftVersion("1.8.8")
 		downloadPlugins {
 			url("https://ci.viaversion.com/job/ViaVersion/1180/artifact/build/libs/ViaVersion-5.4.1.jar")
+			url("https://www.spigotmc.org/resources/vault.34315/download?version=344916")
+			url("https://github.com/EssentialsX/Essentials/releases/download/2.21.1/EssentialsX-2.21.1.jar")
 		}
 	}
 }

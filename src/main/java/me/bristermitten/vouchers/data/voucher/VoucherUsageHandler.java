@@ -10,8 +10,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 public class VoucherUsageHandler {
-    public static final String DATA_PLACEHOLDER = "{value}";
-    public static final String PLAYER_PLACEHOLDER = "{player}";
+
     private final VoucherRegistry voucherRegistry;
     private final VouchersLangService langService;
     private final VoucherUsageExceptionHandler exceptionHandler;
@@ -52,15 +51,10 @@ public class VoucherUsageHandler {
         voucherRegistry.save(voucher);
         voucher.getType().getSettings().getRedeemMessage().ifPresent(redeemMessage ->
                 langService.send(user, Functions.constant(redeemMessage),
-                        Maps.of(DATA_PLACEHOLDER, String.valueOf(voucher.getData()), PLAYER_PLACEHOLDER, user.getName())));
+                        Maps.of(Action.DATA_PLACEHOLDER, String.valueOf(voucher.getData()), Action.PLAYER_PLACEHOLDER, user.getName())));
 
         for (Action action : voucher.getType().getSettings().getActions()) {
-            String actionData = action.getData();
-            if (actionData != null && voucher.getData() != null) {
-                actionData = actionData.replace(DATA_PLACEHOLDER, voucher.getData());
-                actionData = actionData.replace(PLAYER_PLACEHOLDER, user.getName());
-            }
-            action.run(user, actionData);
+            action.runWith(user, voucher.getData());
         }
     }
 }

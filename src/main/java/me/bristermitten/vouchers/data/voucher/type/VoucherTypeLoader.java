@@ -3,8 +3,10 @@ package me.bristermitten.vouchers.data.voucher.type;
 import me.bristermitten.mittenlib.lang.LangMessage;
 import me.bristermitten.vouchers.actions.Action;
 import me.bristermitten.vouchers.actions.ActionParser;
+import me.bristermitten.vouchers.actions.validate.ValidationResponse;
 import me.bristermitten.vouchers.config.ItemConfig;
 import me.bristermitten.vouchers.config.VoucherConfig;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import java.util.Collection;
@@ -40,7 +42,15 @@ public class VoucherTypeLoader {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
-        String defaultData = fromConfig.defaultValue();
+        @Nullable String defaultData = fromConfig.defaultValue();
+
+        if (defaultData != null) {
+            actions.stream()
+                    .<ValidationResponse<?>>reduce(ValidationResponse.ok(null),
+                            (response, action) -> response.then(action.validateWith(defaultData, null)),
+                            ValidationResponse::then)
+                    .getOrThrow();
+        }
         String permission = fromConfig.permission();
         LangMessage receiveMessage = fromConfig.receiveMessage();
         LangMessage redeemMessage = fromConfig.redeemMessage();

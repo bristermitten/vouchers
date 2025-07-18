@@ -2,6 +2,7 @@ package me.bristermitten.vouchers;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.util.Modules;
 import me.bristermitten.mittenlib.MittenLib;
 import me.bristermitten.mittenlib.lang.LangModule;
 import me.bristermitten.mittenlib.minimessage.MiniMessageModule;
@@ -18,7 +19,8 @@ import me.bristermitten.vouchers.data.voucher.VoucherModule;
 import me.bristermitten.vouchers.data.voucher.VoucherUsageListener;
 import me.bristermitten.vouchers.data.voucher.persistence.VoucherPersistence;
 import me.bristermitten.vouchers.database.DatabaseModule;
-import me.bristermitten.vouchers.hooks.HookModule;
+import me.bristermitten.vouchers.hooks.DefaultHookModule;
+import me.bristermitten.vouchers.hooks.HookModuleFactory;
 import me.bristermitten.vouchers.lang.ClaimBoxesLangConfig;
 import me.bristermitten.vouchers.persist.Persistence;
 import me.bristermitten.vouchers.util.GlowEnchant;
@@ -52,9 +54,11 @@ public class MittenVouchers extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        HookModuleFactory hookModuleFactory = new HookModuleFactory();
         final Injector injector = MittenLib.withDefaults(this)
                 .addConfigModules(ClaimBoxesConfigImpl.CONFIG, ClaimBoxesLangConfig.CONFIG, VoucherConfig.CONFIG)
                 .addModules(
+                        Modules.disableCircularProxiesModule(),
                         new DatabaseModule(),
                         new ClaimBoxDataModule(),
                         new VoucherModule(),
@@ -62,7 +66,8 @@ public class MittenVouchers extends JavaPlugin {
                         new PAPIModule(),
                         new FileWatcherModule(),
                         new VouchersCommandsModule(),
-                        new HookModule(),
+                        Modules.override(new DefaultHookModule())
+                                .with(hookModuleFactory.discoverHookModules()),
                         new LangModule(),
                         new MiniMessageModule())
                 .build();

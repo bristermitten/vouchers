@@ -3,6 +3,7 @@ package me.bristermitten.vouchers.data.voucher;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.bristermitten.mittenlib.lang.format.MessageFormatter;
 import me.bristermitten.mittenlib.lang.format.hook.SimpleFormattingHook;
+import me.bristermitten.vouchers.actions.Action;
 import me.bristermitten.vouchers.config.ItemConfig;
 import me.bristermitten.vouchers.config.ItemCreator;
 import me.bristermitten.vouchers.data.voucher.type.VoucherType;
@@ -46,11 +47,11 @@ public class VoucherFactory {
             throw new IllegalArgumentException("Voucher type " + voucher.getType().getId() + " can't create items");
         }
         MessageFormatter withValuePlaceholder = data == null ? messageFormatter : messageFormatter.withExtraHooks(
-                new SimpleFormattingHook((s, p) -> s.replace(VoucherUsageHandler.DATA_PLACEHOLDER, data))
+                new SimpleFormattingHook((s, p) -> s.replace(Action.DATA_PLACEHOLDER, data))
         );
         if (player != null) {
             withValuePlaceholder = withValuePlaceholder.withExtraHooks(
-                    new SimpleFormattingHook((s, p) -> s.replace(VoucherUsageHandler.PLAYER_PLACEHOLDER, player.getName()))
+                    new SimpleFormattingHook((s, p) -> s.replace(Action.PLAYER_PLACEHOLDER, player.getName()))
             );
 
         }

@@ -1,6 +1,9 @@
 package me.bristermitten.vouchers.actions;
 
+import me.bristermitten.mittenlib.util.Null;
+import me.bristermitten.vouchers.actions.validate.ValidationResponse;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -24,7 +27,8 @@ public class ActionParser {
             return Optional.empty();
         }
         final String tag = matcher.group(1);
-        final String content = matcher.group(2).trim();
+        final @Nullable String content = Null.map(matcher.group(2), String::trim);
+
 
         return actionTypeRegistry.getByTag(tag)
                 .map(type -> new Action(type, content));

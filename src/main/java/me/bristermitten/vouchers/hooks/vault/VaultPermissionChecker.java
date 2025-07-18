@@ -1,6 +1,7 @@
-package me.bristermitten.vouchers.hooks;
+package me.bristermitten.vouchers.hooks.vault;
 
 import me.bristermitten.mittenlib.util.Cached;
+import me.bristermitten.vouchers.hooks.PermissionChecker;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

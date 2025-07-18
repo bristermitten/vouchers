@@ -1,12 +1,13 @@
 package me.bristermitten.vouchers.actions.standard;
 
-import me.bristermitten.vouchers.actions.ActionType;
+import me.bristermitten.vouchers.actions.AbstractActionType;
+import me.bristermitten.vouchers.actions.validate.ValidationResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class OPCommandAction implements ActionType {
+public class OPCommandAction extends AbstractActionType<String> {
     @Override
     public @NotNull String getTag() {
         return "OP_COMMAND";
@@ -18,5 +19,10 @@ public class OPCommandAction implements ActionType {
                 Bukkit.getConsoleSender(),
                 value
         );
+    }
+
+    @Override
+    public ValidationResponse<String> validate(@Nullable String value) {
+        return requireValuePresent(value);
     }
 }

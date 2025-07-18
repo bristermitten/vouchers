@@ -2,6 +2,7 @@ package me.bristermitten.vouchers.command;
 
 import me.bristermitten.mittenlib.collections.Maps;
 import me.bristermitten.mittenlib.util.lambda.Functions;
+import me.bristermitten.vouchers.actions.Action;
 import me.bristermitten.vouchers.data.claimbox.ClaimBoxManager;
 import me.bristermitten.vouchers.data.voucher.Voucher;
 import me.bristermitten.vouchers.data.voucher.VoucherRegistry;
@@ -56,14 +57,14 @@ public class CommonVoucherMethods {
             Player player = target.getPlayer();
             if (player == null) {
                 langService.send(sender, conf -> conf.errors().playerOffline(),
-                        Maps.of(VoucherUsageHandler.PLAYER_PLACEHOLDER, target.getName()));
+                        Maps.of(Action.PLAYER_PLACEHOLDER, target.getName()));
                 return;
             }
             ItemStack voucherItem = voucherRegistry.createVoucherItem(voucher, player);
             player.getInventory().addItem(voucherItem);
             voucher.getType().getSettings().getReceiveMessage().ifPresent(receiveMessage ->
                     langService.send(player, Functions.constant(receiveMessage),
-                            Maps.of(VoucherUsageHandler.DATA_PLACEHOLDER, String.valueOf(voucher.getData()))));
+                            Maps.of(Action.DATA_PLACEHOLDER, String.valueOf(voucher.getData()))));
             return;
         }
         claimBoxManager.getBox(target.getUniqueId())
